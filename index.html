@@ -66,6 +66,17 @@ main{max-width:640px;margin:0 auto;padding:12px 16px calc(96px + env(safe-area-i
 .bt{font:600 20px/1.2 var(--head)}
 .bs{color:var(--muted);font-size:15px;margin-top:3px}
 .bx{color:var(--muted);font-size:14px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.rx{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rx div{background:var(--bg);border-radius:14px;padding:10px 8px;text-align:center;min-width:0}
+.rx b{display:block;font:700 40px/1 var(--head);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.rx .main{background:var(--accent-soft)}
+.rx .main b{color:var(--accent-dark)}
+.rx span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;line-height:1.2}
+.line{font-size:15px;color:var(--ink);margin-top:10px;font-weight:600}
+.tip{margin-top:8px;border:0;padding:0;background:transparent}
+.tip summary{padding:6px 0;font-size:14px;color:var(--muted);font-weight:600}
+.tip summary::after{content:""}
+.tip .dbody{font-size:14px;color:var(--muted);padding:0 0 4px}
 .counter{display:flex;align-items:center;gap:10px;margin-top:12px}
 .rbtn{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:28px;line-height:1;flex:0 0 auto}
 .rbtn:disabled{opacity:.35}
@@ -212,9 +223,9 @@ const EX_DEFAULT=[
   {id:'ex_drop',slot:'schock',name:'Niedersprung (30 cm)',levels:['Erst nach einigen Wochen Grundlage']}
 ];
 function mkProfile(name,emoji){return {id:uid(),name,emoji,cycleStart:todayISO(),push:'ex_push',pull:'ex_row',legs:'ex_split',dichte:'ex_split',schock:'ex_jump',gtgLegs:false};}
-function defaults(){const s={v:1,profiles:[mkProfile('Christian','🧔'),mkProfile('Meine Frau','👩')],active:null,exercises:EX_DEFAULT.map(e=>Object.assign({builtin:true},e)),tests:[],log:[]};s.active=s.profiles[0].id;return s;}
+function defaults(){const s={v:1,profiles:[mkProfile('Christian','🧔'),mkProfile('Yvonne','👩')],active:null,exercises:EX_DEFAULT.map(e=>Object.assign({builtin:true},e)),tests:[],log:[]};s.active=s.profiles[0].id;return s;}
 let S=load();
-function load(){try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.v===1&&Array.isArray(s.profiles)&&s.profiles.length)return s;}}catch(e){}return defaults();}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.v===1&&Array.isArray(s.profiles)&&s.profiles.length){s.profiles.forEach(p=>{if(p.name==='Meine Frau')p.name='Yvonne';});return s;}}}catch(e){}return defaults();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Speichern nicht möglich (Speicher gesperrt?)');}}
 const UI={view:(location.hash||'#heute').slice(1),date:todayISO(),sure:null,sureT:null};
 
@@ -291,35 +302,50 @@ function blockCard(p,iso,b,plan){
   const k=KIND[b.kind];let exId=b.exId;let e=findEntry(p.id,iso,b.kind,exId);
   if(b.kind==='schock')exId=(e&&e.exId)||p.schock;if(b.kind==='dichte')exId=(e&&e.exId)||p.dichte;
   const n=numbers(p.id,exId,iso);const sets=e?+e.sets:0;
-  let title='',sub='',extra='',mid='',goal=b.sets?b.sets[1]:0,min=b.sets?b.sets[0]:0,unit=k.u;
+  let title='',tiles=[],line='',tip='',mid='',goal=b.sets?b.sets[1]:0,min=b.sets?b.sets[0]:0,unit=k.u,unitD=k.u==='Sätze'?'Sätzen':k.u,incReps=0;
+  const range=(a,b2)=>a===b2?String(a):a+'–'+b2;
   if(b.kind==='gtg'){
     if(!n)return missingTest(exId,k,'Verteilte Sätze');
-    title=`${esc(exName(exId))} · ${esc(n.level)}`;sub=`<b>${n.gtgReps} Wdh.</b> pro Satz · Ziel ${min}–${goal} Sätze · mind. 15 Min. Abstand`;extra='Jeder Satz endet mit dem Gefühl, dass noch mehr ginge. Wird die letzte Wiederholung langsam, streich eine.';
+    title=`${esc(exName(exId))} · ${esc(n.level)}`;incReps=n.gtgReps;
+    tiles=[{v:n.gtgReps,l:'Wdh. pro Satz',main:true},{v:range(min,goal),l:'Sätze heute'}];
+    line='Über den Tag verteilt, mind. 15 Min. Abstand.';tip='Jeder Satz endet mit dem Gefühl, dass noch mehr ginge. Wird die letzte Wiederholung langsam oder krumm, streich eine.';
   }else if(b.kind==='leiter'){
     if(!n)return missingTest(exId,k,'Leitern');
-    title=`Leitern ${esc(exName(exId))} · ${esc(n.level)}`;sub=`1 bis <b>${n.ladderTop}</b> Wdh., kurze Pause zwischen den Sprossen · Ziel ${min}–${goal} Leitern`;
-    mid=`<div class="ladder">${Array.from({length:n.ladderTop},(_,i)=>`<span${i===n.ladderTop-1?' class="top"':''}>${i+1}</span>`).join('')}<span>↺</span></div>`;extra='Wird die oberste Sprosse unsauber, geht die Leiter nur bis zur Sprosse darunter. Was zählt, ist das saubere Gesamtvolumen.';
+    title=`Leitern ${esc(exName(exId))} · ${esc(n.level)}`;incReps=n.ladderTop;
+    tiles=[{v:'1→'+n.ladderTop,l:'Wdh., Sprosse für Sprosse',main:true},{v:range(min,goal),l:'Leitern'}];
+    line='1 Wdh., kurze Pause, 2, Pause … bis '+n.ladderTop+'. Dann wieder bei 1.';
+    mid=`<div class="ladder">${Array.from({length:n.ladderTop},(_,i)=>`<span${i===n.ladderTop-1?' class="top"':''}>${i+1}</span>`).join('')}<span>↺</span></div>`;
+    tip='Pause: ein paar tiefe Atemzüge, nach der obersten Sprosse bis 30–40 Sekunden. Wird die oberste Sprosse unsauber, geht die Leiter nur bis zur Sprosse darunter.';
   }else if(b.kind==='split'){
-    const reps=n?n.splitReps:6;title=`${esc(exName(exId))}${n?' · '+esc(n.level):''}`;sub=`<b>${reps} Wdh.</b> pro Bein · ${goal} Sätze · 1–3 Wdh. in Reserve`;extra=n?'':'Ohne Maximaltest für die Beine rechnet die App mit 6 Wiederholungen pro Bein.';
+    const reps=n?n.splitReps:6;incReps=reps;title=`${esc(exName(exId))}${n?' · '+esc(n.level):''}`;
+    tiles=[{v:reps,l:'Wdh. pro Bein',main:true},{v:goal,l:'Sätze'}];
+    line='Hinterer Fuß auf Stuhl oder Sofa, Knie fast bis zum Boden.';tip=(n?'':'Ohne Maximaltest für die Beine rechnet die App mit 6 pro Bein. ')+'1–3 Wiederholungen in Reserve lassen. Wackelt es, Hand an die Wand.';
   }else if(b.kind==='schock'){
-    title='Schockmethode';sub=`<b>${b.reps} Wdh.</b> pro Satz · ${min===goal?goal:min+'–'+goal} Sätze · 1–2 Min. Pause · höchstens 2× pro Woche`;
-    mid=`<select class="sel" data-chg="blockEx" data-kind="schock">${opt(bySlot('schock'),exId)}</select>`;extra='Satz vorbei, sobald eine Wiederholung ihre Explosivität verliert. Müde Sprünge sind keine Schockmethode.';
+    title='Schockmethode';incReps=plan.c.deload?3:4;
+    tiles=[{v:b.reps,l:'Wdh. pro Satz',main:true},{v:range(min,goal),l:'Sätze'}];
+    line='1–2 Min. Pause. Immer zuerst, solange du frisch bist.';
+    mid=`<select class="sel" data-chg="blockEx" data-kind="schock">${opt(bySlot('schock'),exId)}</select>`;
+    tip='Satz vorbei, sobald eine Wiederholung ihre Explosivität verliert. Höchstens 2× pro Woche. Müde Sprünge sind keine Schockmethode.';
   }else if(b.kind==='dichte'){
-    const reps=e&&e.reps?+e.reps:(n?n.dichteReps:5);const mins=e&&e.minutes?+e.minutes:b.minutes;goal=0;min=0;
+    const reps=e&&e.reps?+e.reps:(n?n.dichteReps:5);const mins=e&&e.minutes?+e.minutes:b.minutes;goal=0;min=0;incReps=reps;
     const prev=S.log.filter(l=>l.pid===p.id&&l.kind==='dichte'&&l.exId===exId&&l.date<iso&&l.sets>0).sort((a,b2)=>b2.date.localeCompare(a.date));
     const best=prev.reduce((m,l)=>Math.max(m,+l.sets),0);
-    title='Dichteblock';sub=`<b>${mins} Minuten</b> · Sätze à <b>${reps} Wdh.</b>${b.kind==='dichte'&&exId===p.legs?' pro Bein':''} · so viele saubere Sätze wie möglich`;
+    title='Dichteblock';
+    tiles=[{v:mins,l:'Minuten',main:true},{v:reps,l:'Wdh. pro Satz'+(exId===p.legs?' und Bein':'')}];
+    line=prev.length?`Letztes Mal ${prev[0].sets} Sätze (${fmtShort(prev[0].date)}), Rekord ${best}. Heute mehr?`:'So viele saubere Sätze wie möglich, Pausen nach Bedarf.';
     mid=`<select class="sel" data-chg="blockEx" data-kind="dichte">${exOptions(exId,s=>s!=='schock')}</select>
       <div class="timer"><div class="tdisp" id="tdisp" data-min="${mins}">${mmss(T.left)}</div><button class="btn grow primary" id="tstart" data-act="tStart" data-min="${mins}">▶︎ Start</button><button class="btn" data-act="tReset" data-min="${mins}">↺</button></div>`;
-    extra=(prev.length?`Letztes Mal: <b>${prev[0].sets} Sätze</b> (${fmtShort(prev[0].date)}) · Rekord: <b>${best}</b> Sätze. `:'Erster Dichteblock mit dieser Übung: Zahl merken, nächste Woche mehr Sätze schaffen. ')+'Voller Bewegungsumfang, sonst zählt der Satz nicht.';
-    unit='Sätze';
+    tip='Voller Bewegungsumfang, sonst zählt der Satz nicht. Nächste Woche: gleiche Übung, gleiche Zeit, mehr Sätze.';
+    unit='Sätze';unitD='Sätzen';
   }
   const okMin=min&&sets>=min;const pct=goal?Math.min(100,Math.round(sets/goal*100)):0;
-  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div><div class="bs">${sub}</div></div></div>${mid}
-    <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unit}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${b.kind==='dichte'?(e&&e.reps?e.reps:(n?n.dichteReps:5)):b.kind==='gtg'?n.gtgReps:b.kind==='leiter'?n.ladderTop:b.kind==='split'?(n?n.splitReps:6):(plan.c.deload?3:4)}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
+  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div></div></div>
+    <div class="rx">${tiles.map(t=>`<div${t.main?' class="main"':''}><b>${t.v}</b><span>${t.l}</span></div>`).join('')}</div>
+    <div class="line">${line}</div>${mid}
+    <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
     ${goal?`<div class="bar"><i class="${okMin?'ok':''}" style="width:${pct}%"></i></div>`:''}
     ${okMin&&sets<goal?'<div class="hint" style="margin-top:6px">✅ Minimum geschafft, Rest ist Bonus.</div>':sets>=goal&&goal?'<div class="hint" style="margin-top:6px">✅ Ziel erreicht. Mehr ist heute nicht nötig.</div>':''}
-    <div class="bx">${extra}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}</div></div>`;
+    <details class="tip"><summary>ℹ️ Hinweis${e?' · ✎ Eintrag bearbeiten':''}</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}</div></details></div>`;
 }
 function missingTest(exId,k,label){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div></div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest ${esc(exName(exId))}</button></div></div>`;}
 function entryRow(l){const k=KIND[l.kind]||KIND.frei;const v=volume(l);return `<a class="item" href="#" data-act="editEntry" data-id="${l.id}"><div class="ie">${k.e}</div><div class="it"><b>${esc(exName(l.exId))}</b><span>${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}${l.kind==='leiter'?' · bis Sprosse '+l.reps:l.reps?' · '+l.reps+' Wdh.':''}${l.note?' · '+esc(l.note):''}</span></div><div class="iv">${l.sets}<small>${k.u}${v?' · '+v+' Wdh.':''}</small></div></a>`;}
