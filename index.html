@@ -163,9 +163,6 @@ details .dbody p{margin:0 0 8px}
 .pk-chips{padding:6px 16px 8px}
 .pk-q{margin:0 16px 8px;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:17px;background:#fff;-webkit-appearance:none}
 .pk-list{flex:1;overflow-y:auto;border-top:1px solid var(--line);background:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}
-.pk-item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:#fff;padding:12px 16px}
-.pk-item b{display:block;font-weight:600}
-.pk-item span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 .pk-item.on{background:var(--accent-soft)}
 
 .np{display:flex;align-items:center;gap:8px}
@@ -179,6 +176,13 @@ details .dbody p{margin:0 0 8px}
 .kinds{padding:0 0 4px}
 .kinds .chip{font-size:15px;padding:9px 13px}
 .kinds .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.demo{margin-top:8px}
+.demo .btn{text-decoration:none;display:inline-flex;align-items:center}
+.pk-item{display:flex;align-items:center;gap:8px;width:100%;border-bottom:1px solid var(--line);background:#fff;padding:0 8px 0 0}
+.pk-main{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:12px 16px}
+.pk-main b{display:block;font-weight:600}
+.pk-main span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.pk-yt{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:18px;background:var(--bg)}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -305,6 +309,9 @@ const opt=(list,val,fn)=>list.map(x=>`<option value="${esc(x.id)}"${x.id===val?'
 const exOptions=(val,filter)=>['push','pull','legs','schock'].filter(s=>!filter||filter(s)).map(s=>`<optgroup label="${SLOT[s]}">${opt(bySlot(s),val)}</optgroup>`).join('');
 function pickLabel(id){const e=ex(id);return e?`<span class="pk-name">${esc(e.name)}</span><small>${esc(muscleName(e))} · tippen zum Ändern</small>`:'<span class="pk-name">Übung wählen</span><small>tippen</small>';}
 const pickBtn=(target,value,filter,cls)=>`${target.startsWith('f-')?`<input type="hidden" id="${target}" value="${esc(value||'')}">`:''}<button type="button" class="${cls||'btn big'} pick" data-act="pickEx" data-target="${target}" data-filter="${filter||''}">${pickLabel(value)}<i>▾</i></button>`;
+const ytUrl=e=>'https://www.youtube.com/results?search_query='+encodeURIComponent((e?e.name:'')+' Übung richtige Ausführung');
+const imgUrl=e=>'https://www.google.com/search?tbm=isch&q='+encodeURIComponent((e?e.name:'')+' Übung Muskeln Anatomie');
+const demoLinks=e=>e?`<div class="row demo"><a class="btn sm" href="${ytUrl(e)}" target="_blank" rel="noopener">▶️ Beispielvideo</a><a class="btn sm" href="${imgUrl(e)}" target="_blank" rel="noopener">🖼️ Muskelbilder</a></div>`:'';
 const sure=(id,label)=>UI.sure===id?`<button class="btn danger sure" data-act="${label}" data-id="${id}">Wirklich löschen?</button>`:`<button class="btn danger" data-act="${label}" data-id="${id}">🗑 Löschen</button>`;
 
 /* ---------- Heute ---------- */
@@ -385,9 +392,9 @@ function blockCard(p,iso,b,plan){
     <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
     ${goal?`<div class="bar"><i class="${okMin?'ok':''}" style="width:${pct}%"></i></div>`:''}
     ${okMin&&sets<goal?'<div class="hint" style="margin-top:6px">✅ Minimum geschafft, Rest ist Bonus.</div>':sets>=goal&&goal?'<div class="hint" style="margin-top:6px">✅ Ziel erreicht. Mehr ist heute nicht nötig.</div>':''}
-    <details class="tip"><summary>ℹ️ Hinweis${e?' · ✎ Eintrag bearbeiten':''}</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}<div style="margin-top:8px"><button class="btn sm" data-act="blockOff" data-key="${b.key}">🚫 Aus meinem Plan nehmen</button></div></div></details></div>`;
+    <details class="tip"><summary>ℹ️ Hinweis${e?' · ✎ Eintrag bearbeiten':''}</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}${demoLinks(ex(exId))}<div style="margin-top:8px"><button class="btn sm" data-act="blockOff" data-key="${b.key}">🚫 Aus meinem Plan nehmen</button></div></div></details></div>`;
 }
-function missingTest(exId,k,label,key){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div></div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div></div>`;}
+function missingTest(exId,k,label,key){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div></div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div>${demoLinks(ex(exId))}</div>`;}
 function entryRow(l){const k=KIND[l.kind]||KIND.frei;const v=volume(l);return `<a class="item" href="#" data-act="editEntry" data-id="${l.id}"><div class="ie">${k.e}</div><div class="it"><b>${esc(exName(l.exId))}</b><span>${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}${l.kind==='leiter'?' · bis Sprosse '+l.reps:l.reps?' · '+l.reps+' Wdh.':''}${l.note?' · '+esc(l.note):''}</span></div><div class="iv">${l.sets}<small>${k.u}${v?' · '+v+' Wdh.':''}</small></div></a>`;}
 
 /* ---------- Verlauf ---------- */
@@ -547,7 +554,7 @@ function exerciseModal(id){
   modal(id?'Übung bearbeiten':'Neue Übung',`
     <div class="field"><label>Name</label><input type="text" id="f-name" value="${esc(e.name)}" placeholder="z. B. Dips am Stuhl"></div>
     <div class="field"><label>Muskelgruppe</label><select id="f-muscle">${Object.keys(MUSCLES).map(m=>`<option value="${m}"${m===(e.muscle||'sonstige')?' selected':''}>${MUSCLES[m].e} ${MUSCLES[m].n}</option>`).join('')}</select></div>
-    <div class="field"><label>Stufen, leicht → schwer (eine pro Zeile)</label><textarea id="f-levels" style="min-height:120px">${esc(e.levels.join('\n'))}</textarea></div>`,
+    <div class="field"><label>Stufen, leicht → schwer (eine pro Zeile)</label><textarea id="f-levels" style="min-height:120px">${esc(e.levels.join('\n'))}</textarea></div>${id?demoLinks(e):''}`,
     `<button class="btn primary grow" data-act="mSave">💾 Speichern</button>${id?sure(id,'mDelete'):''}`);
 }
 function saveExercise(){const name=val('f-name');if(!name){toast('Bitte einen Namen eingeben');return;}
@@ -567,7 +574,7 @@ function renderPicker(){const ms=Object.keys(MUSCLES).filter(m=>S.exercises.some
   $('#pk-chips').innerHTML=`<button class="chip${!PK.muscle?' on':''}" data-act="pkMuscle" data-m="">Alle</button>`+ms.map(m=>`<button class="chip${PK.muscle===m?' on':''}" data-act="pkMuscle" data-m="${m}">${MUSCLES[m].e} ${MUSCLES[m].n}</button>`).join('');
   const q=PK.q.toLowerCase();const list=S.exercises.filter(e=>pkPass(e)&&(!PK.muscle||(e.muscle||'sonstige')===PK.muscle)&&(!q||e.name.toLowerCase().includes(q)||muscleName(e).toLowerCase().includes(q)));
   $('#pk-count').textContent=list.length+' Übungen';
-  $('#pk-list').innerHTML=list.length?list.map(e=>`<button type="button" class="pk-item${e.id===PK.current?' on':''}" data-act="pkSel" data-id="${e.id}"><b>${esc(e.name)}</b><span>${esc(muscleName(e))} · ${esc(e.levels.slice(0,3).join(' → '))}${e.levels.length>3?' …':''}</span></button>`).join(''):'<div class="hint" style="padding:16px">Nichts gefunden. In den Einstellungen kannst du eigene Übungen anlegen.</div>';}
+  $('#pk-list').innerHTML=list.length?list.map(e=>`<div class="pk-item${e.id===PK.current?' on':''}"><button type="button" class="pk-main" data-act="pkSel" data-id="${e.id}"><b>${esc(e.name)}</b><span>${esc(muscleName(e))} · ${esc(e.levels.slice(0,3).join(' → '))}${e.levels.length>3?' …':''}</span></button><a class="pk-yt" href="${ytUrl(e)}" target="_blank" rel="noopener" title="Beispielvideo">▶️</a></div>`).join(''):'<div class="hint" style="padding:16px">Nichts gefunden. In den Einstellungen kannst du eigene Übungen anlegen.</div>';}
 function pickDone(id){const t=PK.target;$('#picker').hidden=true;
   if(t.startsWith('card:')){const kind=t.slice(5);const p=prof();const e=findEntry(p.id,UI.date,kind,null);if(e)e.exId=id;p[kind]=id;save();render();return;}
   const inp=$('#'+t);if(inp)inp.value=id;const btn=document.querySelector(`.pick[data-target="${t}"]`);if(btn)btn.innerHTML=pickLabel(id)+'<i>▾</i>';
