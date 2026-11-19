@@ -88,6 +88,8 @@ main{max-width:640px;margin:0 auto;padding:12px 16px calc(100px + env(safe-area-
 .rx .main{background:var(--grad)}
 .rx .main b{color:#0f1116}
 .rx .main span{color:rgba(15,17,22,.72)}
+.rx .tap{cursor:pointer}
+.rx .tap:active{transform:scale(.98)}
 .rx span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;line-height:1.2}
 .line{font-size:15px;color:var(--ink);margin-top:12px;font-weight:600}
 .tip{margin-top:8px;border:0;padding:0;background:transparent}
@@ -343,7 +345,11 @@ const bySlot=slot=>S.exercises.filter(e=>e.slot===slot);
 const muscleName=e=>(MUSCLES[e&&e.muscle]||MUSCLES.sonstige).n;
 const byMuscle=m=>S.exercises.filter(e=>(e.muscle||'sonstige')===m);
 function latestTest(pid,exId,upto){const l=S.tests.filter(t=>t.pid===pid&&t.exId===exId&&(!upto||t.date<=upto)).sort((a,b)=>b.date.localeCompare(a.date)||(b.created||0)-(a.created||0));return l[0]||null;}
-function numbers(pid,exId,upto){const t=latestTest(pid,exId,upto);if(!t)return null;const M=t.max;return {test:t,max:M,level:t.level,gtgReps:Math.max(1,Math.round(M/2)),ladderTop:M>=12?5:M>=8?4:M>=5?3:M>=3?2:1,dichteReps:Math.max(1,Math.round(M/2)),splitReps:Math.min(10,Math.max(5,Math.round(M/2))),hint:M>=20?'schwerer':M<5?'leichter':null};}
+function numbers(pid,exId,upto){const t=latestTest(pid,exId,upto);if(!t)return null;const M=t.max;const half=Math.max(1,Math.round(M/2));
+  const n={test:t,max:M,level:t.level,gtgReps:half,ladderTop:M>=12?5:M>=8?4:M>=5?3:M>=3?2:1,dichteReps:half,splitReps:Math.min(10,Math.max(5,half)),hint:M>=20?'schwerer':M<5?'leichter':null,vorschlag:{reps:half,ladder:M>=12?5:M>=8?4:M>=5?3:M>=3?2:1},adj:null};
+  const pr=S.profiles.find(x=>x.id===pid);const a=pr&&pr.adj&&pr.adj[exId];
+  if(a){n.adj=a;if(a.reps){n.gtgReps=a.reps;n.dichteReps=a.reps;n.splitReps=a.reps;}if(a.ladder)n.ladderTop=a.ladder;}
+  return n;}
 function cycle(p,iso){const d=daysBetween(p.cycleStart,iso);if(d<0)return {before:true,week:0,cw:0,deload:false};const week=Math.floor(d/7)+1;const cw=((week-1)%4)+1;return {before:false,week,cw,deload:cw===4};}
 function entries(pid,iso){return S.log.filter(l=>l.pid===pid&&l.date===iso);}
 function findEntry(pid,iso,kind,exId){return S.log.find(l=>l.pid===pid&&l.date===iso&&l.kind===kind&&(kind==='schock'||kind==='dichte'?true:l.exId===exId))||null;}
@@ -457,7 +463,7 @@ function blockCard(p,iso,b,plan){
   }
   const okMin=min&&sets>=min;const pct=goal?Math.min(100,Math.round(sets/goal*100)):0;
   return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div></div>${infoBtn(b.kind)}</div>
-    <div class="rx">${tiles.map(t=>`<div${t.main?' class="main"':''}><b>${t.v}</b><span>${t.l}</span></div>`).join('')}</div>
+    <div class="rx">${tiles.map(t=>`<div${t.main?` class="main tap" data-act="adjust" data-ex="${exId}"`:''}><b>${t.v}</b><span>${t.l}${t.main&&n&&b.kind!=='schock'?' · ✎ ändern':''}</span></div>`).join('')}</div>
     <div class="line">${line}</div>${mid}
     <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
     ${goal?`<div class="bar"><i class="${okMin?'ok':''}" style="width:${pct}%"></i></div>`:''}
@@ -497,14 +503,14 @@ function viewVerlauf(){
 function viewTests(){
   const p=prof();const used=[p.push,p.pull,p.legs,p.dichte].filter((x,i,a)=>x&&a.indexOf(x)===i);
   const ids=used.concat(S.exercises.filter(e=>e.slot!=='schock'&&!used.includes(e.id)&&S.tests.some(t=>t.pid===p.id&&t.exId===e.id)).map(e=>e.id));
-  let h=`<div class="card blue"><div class="bh"><div class="be">🧪</div><div style="min-width:0"><div class="bt">Maximaltest</div><div class="bs">So viele saubere Wiederholungen wie möglich, einmal pro Übung. Daraus rechnet die App: Satzgröße = Hälfte, Leiter bis 1–5, Dichteblock. Neu testen nach jeder leichten Woche.</div></div>${infoBtn('test')}</div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest">＋ Maximaltest eintragen</button></div></div>`;
+  let h=`<div class="card blue"><div class="bh"><div class="be">🧪</div><div style="min-width:0"><div class="bt">Maximaltest</div><div class="bs">So viele saubere Wiederholungen wie möglich, einmal pro Übung. Daraus rechnet die App: Satzgröße = Hälfte, Leiter bis 1–5, Dichteblock. Neu testen nach jeder leichten Woche. <b>Tippe auf einen Test, um ihn zu ändern oder zu löschen.</b></div></div>${infoBtn('test')}</div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest">＋ Maximaltest eintragen</button></div></div>`;
   ids.forEach(id=>{const e=ex(id);if(!e)return;const list=S.tests.filter(t=>t.pid===p.id&&t.exId===id).sort((a,b)=>b.date.localeCompare(a.date)||(b.created||0)-(a.created||0));const n=numbers(p.id,id);
     h+=`<h2>${esc(e.name)} · ${SLOT[e.slot]}</h2><div class="card">`;
-    if(n){h+=`<div class="row" style="gap:6px;margin-bottom:8px"><span class="pill red">Max ${n.max} · ${esc(n.level)}</span><span class="pill">Satzgröße ${n.gtgReps}</span><span class="pill">Leiter bis ${n.ladderTop}</span><span class="pill">Dichte à ${n.dichteReps}</span></div>`;
+    if(n){h+=`<div class="row" style="gap:6px;margin-bottom:8px"><span class="pill red">Max ${n.max} · ${esc(n.level)}</span><span class="pill">Satzgröße ${n.gtgReps}</span><span class="pill">Leiter bis ${n.ladderTop}</span>${n.adj?'<span class="pill blue">von Hand angepasst</span>':''}</div><div class="row" style="margin-bottom:10px"><button class="btn sm" data-act="adjust" data-ex="${id}">✎ Satzgröße und Leiter anpassen</button></div>`;
       if(n.hint==='schwerer')h+=`<div class="hint" style="margin-bottom:8px">💡 Über 20 Wiederholungen: beim nächsten Test die nächste Stufe (${esc(nextLevel(e,n.level,1))}) probieren.</div>`;
       if(n.hint==='leichter')h+=`<div class="hint" style="margin-bottom:8px">💡 Unter 5 Wiederholungen: lieber eine leichtere Stufe (${esc(nextLevel(e,n.level,-1))}) nehmen, die Methode bleibt gleich.</div>`;}
     else h+=`<div class="hint" style="margin-bottom:8px">Noch kein Test.</div>`;
-    h+=`<div class="list">`+list.map(t=>`<a class="item" href="#" data-act="editTest" data-id="${t.id}"><div class="ie">🧪</div><div class="it"><b>${fmtDate(t.date)}</b><span>${esc(t.level)}${t.note?' · '+esc(t.note):''}</span></div><div class="iv">${t.max}<small>max. Wdh.</small></div></a>`).join('')+`</div><button class="btn sm" style="margin-top:8px" data-act="addTest" data-ex="${id}">＋ Test ${esc(e.name)}</button></div>`;});
+    h+=`<div class="list">`+list.map(t=>`<a class="item" href="#" data-act="editTest" data-id="${t.id}"><div class="ie">🧪</div><div class="it"><b>${fmtDate(t.date)}</b><span>${esc(t.level)}${t.note?' · '+esc(t.note):''} · ✎ ändern</span></div><div class="iv">${t.max}<small>max. Wdh.</small></div></a>`).join('')+`</div><button class="btn sm" style="margin-top:8px" data-act="addTest" data-ex="${id}">＋ Test ${esc(e.name)}</button></div>`;});
   return h;
 }
 function nextLevel(e,level,dir){const i=e.levels.indexOf(level);const j=i+dir;return e.levels[j]||(dir>0?'schwerere Variante':'leichtere Variante');}
@@ -607,8 +613,19 @@ function testModal(id,exId){
 function saveTest(){const p=prof();const mx=Math.round(num('f-max'));if(mx<1){toast('Bitte das Maximum eintragen');return;}
   const d={exId:val('f-ex'),level:val('f-level'),date:val('f-date')||UI.date,max:mx,note:val('f-note')};
   if(M.id)Object.assign(S.tests.find(x=>x.id===M.id),d);else S.tests.push(Object.assign({id:uid(),pid:p.id,created:Date.now()},d));
-  const n=numbers(p.id,d.exId);save();closeModal();render();toast(`Gespeichert · Satzgröße ${n.gtgReps}, Leiter bis ${n.ladderTop}`);}
+  if(p.adj&&p.adj[d.exId])delete p.adj[d.exId];const n=numbers(p.id,d.exId);save();closeModal();render();toast(`Gespeichert · Satzgröße ${n.gtgReps}, Leiter bis ${n.ladderTop}`);}
 
+function adjustModal(exId){const p=prof();const n=numbers(p.id,exId);const e=ex(exId);if(!e)return;
+  if(!n){testModal(null,exId);return;}
+  M={type:'adjust',id:exId};
+  modal('Zahlen anpassen · '+e.name,`
+    <div class="hint" style="margin-bottom:12px">Dein Maximaltest: <b>${n.max} Wdh.</b> (${esc(n.level)}, ${fmtDate(n.test.date)}). Vorschlag der App: <b>${n.vorschlag.reps}</b> pro Satz, Leiter bis <b>${n.vorschlag.ladder}</b>. Du kannst beides frei ändern, zum Beispiel wenn 7 zu leicht war und du 8 willst, oder weniger.</div>
+    <div class="field"><label>Wiederholungen pro Satz (verteilte Sätze, Dichteblock, Beine)</label>${numPick('f-areps',n.gtgReps,1,60)}</div>
+    <div class="field"><label>Leiter bis Sprosse</label>${numPick('f-aladder',n.ladderTop,1,10)}</div>
+    <div class="row" style="margin-top:4px"><button class="btn sm" data-act="adjustReset" data-ex="${exId}">↩︎ Zurück auf Vorschlag</button><button class="btn sm" data-act="editTest" data-id="${n.test.id}">🧪 Maximaltest ändern</button></div>`,
+    `<button class="btn primary grow" data-act="mSave">💾 Übernehmen</button>`);
+}
+function saveAdjust(){const p=prof();p.adj=p.adj||{};p.adj[M.id]={reps:Math.max(1,Math.round(num('f-areps'))),ladder:Math.max(1,Math.round(num('f-aladder')))};save();closeModal();render();toast('Übernommen: '+p.adj[M.id].reps+' pro Satz, Leiter bis '+p.adj[M.id].ladder);}
 function profileModal(id){
   const p=id?S.profiles.find(x=>x.id===id):mkProfile('','🙂');if(!p)return;M={type:'profile',id};
   modal(id?'Profil bearbeiten':'Neues Profil',`
@@ -716,7 +733,9 @@ const ACT={
   tStart:el=>timerStart(+el.dataset.min||15),
   tReset:el=>timerReset(+el.dataset.min||15),
   mClose:()=>closeModal(),
-  mSave:()=>{if(!M)return;({entry:saveEntry,test:saveTest,profile:saveProfile,exercise:saveExercise})[M.type]();},
+  mSave:()=>{if(!M)return;({entry:saveEntry,test:saveTest,profile:saveProfile,exercise:saveExercise,adjust:saveAdjust})[M.type]();},
+  adjust:el=>adjustModal(el.dataset.ex),
+  adjustReset:el=>{const p=prof();if(p.adj)delete p.adj[el.dataset.ex];save();closeModal();render();toast('Wieder der Vorschlag der App');},
   mDelete:el=>{if(!M||!M.id)return;const id=M.id;if(UI.sure!==id){setSure(id);refreshModalFoot();return;}
     if(M.type==='entry')S.log=S.log.filter(x=>x.id!==id);
     else if(M.type==='test')S.tests=S.tests.filter(x=>x.id!==id);
