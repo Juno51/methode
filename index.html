@@ -88,8 +88,28 @@ main{max-width:640px;margin:0 auto;padding:12px 16px calc(100px + env(safe-area-
 .rx .main{background:var(--grad)}
 .rx .main b{color:#0f1116}
 .rx .main span{color:rgba(15,17,22,.72)}
-.rx .tap{cursor:pointer}
-.rx .tap:active{transform:scale(.98)}
+.card.block{padding:0;overflow:hidden}
+.chead{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card2);border-bottom:1px solid var(--line)}
+.chead .be{font-size:24px}
+.chead .bt{font-size:20px;min-width:0}
+.chead .ci{margin-left:auto}
+.cinfo{padding:12px 16px 14px}
+.cact{padding:12px 16px 14px;border-top:1px solid var(--line);background:rgba(143,230,208,.05)}
+.lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:2px}
+.lbl.act{color:var(--mint)}
+.cinfo .rx{margin-top:8px}
+.cinfo .rx div{border:1px dashed var(--line)}
+.cinfo .rx .main{border:0}
+.cinfo .line{margin-top:10px;font-weight:500;color:var(--muted)}
+.cinfo .line b{color:var(--ink)}
+.sprossen{margin-top:8px;font:600 15px/1.4 var(--head);color:var(--muted);letter-spacing:.06em}
+.sprossen b{color:var(--mint)}
+.cinfo .row.tools{margin-top:12px}
+.pick.sel{margin-top:10px;border:1px solid rgba(143,230,208,.45)}
+.cact .counter{margin-top:8px}
+.tip summary{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:14px;color:var(--ink);background:var(--card2);margin-top:4px}
+.tip summary::after{content:"▾";color:var(--muted)}
+details[open].tip summary::after{content:"▴"}
 .rx span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;line-height:1.2}
 .line{font-size:15px;color:var(--ink);margin-top:12px;font-weight:600}
 .tip{margin-top:8px;border:0;padding:0;background:transparent}
@@ -171,9 +191,6 @@ details summary::after{content:"＋";color:var(--muted)}
 details[open] summary::after{content:"－"}
 details .dbody{padding:0 0 12px;color:var(--muted);font-size:15px}
 details .dbody p{margin:0 0 8px}
-.ladder{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.ladder span{background:var(--card2);border-radius:10px;padding:6px 10px;font:600 15px/1 var(--head)}
-.ladder span.top{background:var(--accent-soft);color:var(--mint)}
 .pick{display:flex;align-items:center;gap:10px;text-align:left;width:100%}
 .pick .pk-name{display:block;font-weight:600;line-height:1.2}
 .pick small{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
@@ -425,7 +442,7 @@ function blockCard(p,iso,b,plan){
   const k=KIND[b.kind];let exId=b.exId;let e=findEntry(p.id,iso,b.kind,exId);
   if(b.kind==='schock')exId=(e&&e.exId)||p.schock;if(b.kind==='dichte')exId=(e&&e.exId)||p.dichte;
   const n=numbers(p.id,exId,iso);const sets=e?+e.sets:0;
-  let title='',tiles=[],line='',tip='',mid='',goal=b.sets?b.sets[1]:0,min=b.sets?b.sets[0]:0,unit=k.u,unitD=k.u==='Sätze'?'Sätzen':k.u,incReps=0;
+  let title='',tiles=[],line='',tip='',pickHtml='',timerHtml='',goal=b.sets?b.sets[1]:0,min=b.sets?b.sets[0]:0,unit=k.u,unitD=k.u==='Sätze'?'Sätzen':k.u,incReps=0;
   const range=(a,b2)=>a===b2?String(a):a+'–'+b2;
   if(b.kind==='gtg'){
     if(!n)return missingTest(exId,k,'Verteilte Sätze',b.key);
@@ -437,7 +454,7 @@ function blockCard(p,iso,b,plan){
     title=`Leitern ${esc(exName(exId))} · ${esc(n.level)}`;incReps=n.ladderTop;
     tiles=[{v:'1→'+n.ladderTop,l:'Wdh., Sprosse für Sprosse',main:true},{v:range(min,goal),l:'Leitern'}];
     line='1 Wdh., kurze Pause, 2, Pause … bis '+n.ladderTop+'. Dann wieder bei 1.';
-    mid=`<div class="ladder">${Array.from({length:n.ladderTop},(_,i)=>`<span${i===n.ladderTop-1?' class="top"':''}>${i+1}</span>`).join('')}<span>↺</span></div>`;
+    line+=`<div class="sprossen">Sprossen: ${Array.from({length:n.ladderTop},(_,i)=>i+1===n.ladderTop?`<b>${i+1}</b>`:String(i+1)).join(' · ')} · ↺ von vorn</div>`;
     tip='Pause: ein paar tiefe Atemzüge, nach der obersten Sprosse bis 30–40 Sekunden. Wird die oberste Sprosse unsauber, geht die Leiter nur bis zur Sprosse darunter.';
   }else if(b.kind==='split'){
     const reps=n?n.splitReps:6;incReps=reps;title=`${esc(exName(exId))}${n?' · '+esc(n.level):''}`;
@@ -447,7 +464,7 @@ function blockCard(p,iso,b,plan){
     title='Schockmethode';incReps=plan.c.deload?3:4;
     tiles=[{v:b.reps,l:'Wdh. pro Satz',main:true},{v:range(min,goal),l:'Sätze'}];
     line='1–2 Min. Pause. Immer zuerst, solange du frisch bist.';
-    mid=pickBtn('card:schock',exId,'slot:schock','sel pick');
+    pickHtml=pickBtn('card:schock',exId,'slot:schock','sel pick');
     tip='Satz vorbei, sobald eine Wiederholung ihre Explosivität verliert. Höchstens 2× pro Woche. Müde Sprünge sind keine Schockmethode.';
   }else if(b.kind==='dichte'){
     const reps=e&&e.reps?+e.reps:(n?n.dichteReps:5);const mins=e&&e.minutes?+e.minutes:b.minutes;goal=0;min=0;incReps=reps;
@@ -456,27 +473,38 @@ function blockCard(p,iso,b,plan){
     title='Dichteblock';
     tiles=[{v:mins,l:'Minuten',main:true},{v:reps,l:'Wdh. pro Satz'+(exId===p.legs?' und Bein':'')}];
     line=prev.length?`Letztes Mal ${prev[0].sets} Sätze (${fmtShort(prev[0].date)}), Rekord ${best}. Heute mehr?`:'So viele saubere Sätze wie möglich, Pausen nach Bedarf.';
-    mid=pickBtn('card:dichte',exId,'not:schock','sel pick')+`
-      <div class="timer"><div class="tdisp" id="tdisp" data-min="${mins}">${mmss(T.left)}</div><button class="btn grow primary" id="tstart" data-act="tStart" data-min="${mins}">▶︎ Start</button><button class="btn" data-act="tReset" data-min="${mins}">↺</button></div>`;
+    pickHtml=pickBtn('card:dichte',exId,'not:schock','sel pick');
+    timerHtml=`<div class="timer"><div class="tdisp" id="tdisp" data-min="${mins}">${mmss(T.left)}</div><button class="btn grow primary" id="tstart" data-act="tStart" data-min="${mins}">▶︎ Start</button><button class="btn" data-act="tReset" data-min="${mins}">↺</button></div>`;
     tip='Voller Bewegungsumfang, sonst zählt der Satz nicht. Nächste Woche: gleiche Übung, gleiche Zeit, mehr Sätze.';
     unit='Sätze';unitD='Sätzen';
   }
   const okMin=min&&sets>=min;const pct=goal?Math.min(100,Math.round(sets/goal*100)):0;
-  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div></div>${infoBtn(b.kind)}</div>
-    <div class="rx">${tiles.map(t=>`<div${t.main?(b.kind!=='schock'?` class="main tap" data-act="adjust" data-ex="${exId}"`:' class="main"'):''}><b>${t.v}</b><span>${t.l}${t.main&&b.kind!=='schock'?' · ✎ ändern':''}</span></div>`).join('')}</div>
-    <div class="line">${line}</div>${mid}
-    <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
-    ${goal?`<div class="bar"><i class="${okMin?'ok':''}" style="width:${pct}%"></i></div>`:''}
-    ${okMin&&sets<goal?'<div class="hint" style="margin-top:6px">✅ Minimum geschafft, Rest ist Bonus.</div>':sets>=goal&&goal?'<div class="hint" style="margin-top:6px">✅ Ziel erreicht. Mehr ist heute nicht nötig.</div>':''}
-    <details class="tip"><summary>ℹ️ Hinweis${e?' · ✎ Eintrag bearbeiten':''}</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}${demoLinks(ex(exId))}<div style="margin-top:8px"><button class="btn sm" data-act="blockOff" data-key="${b.key}">🚫 Aus meinem Plan nehmen</button></div></div></details></div>`;
+  const adjustBtn=(b.kind!=='schock'&&n)?`<button class="btn sm" data-act="adjust" data-ex="${exId}">✎ Zahlen anpassen</button>`:'';
+  return `<div class="card block">
+    <div class="chead"><div class="be">${k.e}</div><div class="bt">${title}</div>${infoBtn(b.kind)}</div>
+    <div class="cinfo"><div class="lbl">Deine Vorgabe heute</div>
+      <div class="rx">${tiles.map(t=>`<div${t.main?' class="main"':''}><b>${t.v}</b><span>${t.l}</span></div>`).join('')}</div>
+      <div class="line">${line}</div>${pickHtml}
+      ${adjustBtn?`<div class="row tools">${adjustBtn}</div>`:''}
+    </div>
+    <div class="cact"><div class="lbl act">Dein Fortschritt · hier tippen</div>${timerHtml}
+      <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
+      ${goal?`<div class="bar"><i class="${okMin?'ok':''}" style="width:${pct}%"></i></div>`:''}
+      ${okMin&&sets<goal?'<div class="hint" style="margin-top:6px">✅ Minimum geschafft, Rest ist Bonus.</div>':sets>=goal&&goal?'<div class="hint" style="margin-top:6px">✅ Ziel erreicht. Mehr ist heute nicht nötig.</div>':''}
+      <details class="tip"><summary>ℹ️ Hinweis, Video & mehr</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}${demoLinks(ex(exId))}<div style="margin-top:8px"><button class="btn sm" data-act="blockOff" data-key="${b.key}">🚫 Aus meinem Plan nehmen</button></div></div></details>
+    </div></div>`;
 }
 function dayProgress(p,iso,plan){let tot=0,done=0;plan.blocks.forEach(b=>{if(b.kind==='dichte'){const e=findEntry(p.id,iso,'dichte',null);tot+=1;done+=e&&e.sets>0?1:0;return;}const min=b.sets?b.sets[0]:0;if(!min)return;const e=findEntry(p.id,iso,b.kind,b.exId);tot+=min;done+=Math.min(min,e?+e.sets:0);});return tot?Math.round(done/tot*100):0;}
-function missingTest(exId,k,label,key){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div>${infoBtn('test')}</div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div>${demoLinks(ex(exId))}</div>`;}
+function missingTest(exId,k,label,key){return `<div class="card block"><div class="chead"><div class="be">${k.e}</div><div class="bt">${label} ${esc(exName(exId))}</div>${infoBtn('test')}</div><div class="cinfo"><div class="lbl">Noch kein Maximaltest</div><div class="line">Einmal so viele saubere Wiederholungen wie möglich. Daraus rechnet die App deine Sätze aus.</div>${demoLinks(ex(exId))}</div><div class="cact"><div class="lbl act">Hier tippen</div><div class="row" style="margin-top:8px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">🧪 Maximaltest eintragen</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div></div></div>`;}
 function entryCard(l){const k=KIND[l.kind]||KIND.frei;const e=ex(l.exId);const reps=+l.reps||0;const sets=+l.sets||0;const ges=l.kind==='leiter'?sets*(reps*(reps+1)/2):sets*reps;
-  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${esc(exName(l.exId))}</div><div class="bs">${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}</div></div>${infoBtn(l.kind)}</div>
-    <div class="rx"><div class="main"><b>${reps||'–'}</b><span>${l.kind==='leiter'?'Oberste Sprosse':'Wdh. pro Satz'}</span></div><div><b>${ges}</b><span>Wdh. gesamt</span></div></div>
-    <div class="counter"><button class="rbtn" data-act="entDec" data-id="${l.id}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}<small>${l.kind==='leiter'?'Leitern':'Sätze'}</small></div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="entInc" data-id="${l.id}">＋ ${l.kind==='leiter'?'Leiter':'Satz'}</button></div>
-    <details class="tip"><summary>ℹ️ Hinweis · ✎ Eintrag bearbeiten</summary><div class="dbody">${INFO[l.kind]?INFO[l.kind].kurz:''} <a href="#" data-act="editEntry" data-id="${l.id}">✎ Eintrag bearbeiten${l.note?' · Notiz: '+esc(l.note):''}</a>${demoLinks(e)}</div></details></div>`;}
+  return `<div class="card block"><div class="chead"><div class="be">${k.e}</div><div class="bt">${esc(exName(l.exId))}</div>${infoBtn(l.kind)}</div>
+    <div class="cinfo"><div class="lbl">${esc(k.n)}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}</div>
+      <div class="rx"><div class="main"><b>${reps||'–'}</b><span>${l.kind==='leiter'?'Oberste Sprosse':'Wdh. pro Satz'}</span></div><div><b>${ges}</b><span>Wdh. gesamt</span></div></div>
+      <div class="row tools"><button class="btn sm" data-act="editEntry" data-id="${l.id}">✎ Eintrag ändern</button></div></div>
+    <div class="cact"><div class="lbl act">Dein Fortschritt · hier tippen</div>
+      <div class="counter"><button class="rbtn" data-act="entDec" data-id="${l.id}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}<small>${l.kind==='leiter'?'Leitern':'Sätze'}</small></div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="entInc" data-id="${l.id}">＋ ${l.kind==='leiter'?'Leiter':'Satz'}</button></div>
+      <details class="tip"><summary>ℹ️ Hinweis, Video & mehr</summary><div class="dbody">${INFO[l.kind]?INFO[l.kind].kurz:''}${l.note?' · Notiz: '+esc(l.note):''}${demoLinks(e)}</div></details>
+    </div></div>`;}
 function entryRow(l){const k=KIND[l.kind]||KIND.frei;const v=volume(l);return `<a class="item" href="#" data-act="editEntry" data-id="${l.id}"><div class="ie">${k.e}</div><div class="it"><b>${esc(exName(l.exId))}</b><span>${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}${l.kind==='leiter'?' · bis Sprosse '+l.reps:l.reps?' · '+l.reps+' Wdh.':''}${l.note?' · '+esc(l.note):''}</span></div><div class="iv">${l.sets}<small>${k.u}${v?' · '+v+' Wdh.':''}</small></div></a>`;}
 
 /* ---------- Verlauf ---------- */
