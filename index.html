@@ -210,6 +210,19 @@ details .dbody p{margin:0 0 8px}
 .info-body{flex:1;overflow-y:auto;padding:4px 16px 24px;font-size:16px;line-height:1.5;background:var(--card);border-top:1px solid var(--line)}
 .info-body p{margin:0 0 12px}
 .info-kurz{font-weight:600;color:var(--ink);padding:10px 16px 12px}
+.intro-head{background:var(--grad);color:#0f1116;padding:12px 16px 18px}
+.intro-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.intro-head .btn{background:rgba(15,17,22,.12);border-color:transparent;color:#0f1116}
+.dots{display:flex;gap:6px;align-items:center}
+.dots i{width:8px;height:8px;border-radius:4px;background:rgba(15,17,22,.25);transition:width .2s}
+.dots i.on{background:#0f1116;width:24px}
+.intro-e{font-size:40px;line-height:1}
+.intro-t{font:700 30px/1.1 var(--head);text-transform:uppercase;letter-spacing:.02em;margin-top:8px}
+.intro-body{flex:1;overflow-y:auto;padding:16px 16px 24px;font-size:17px;line-height:1.55;background:var(--bg)}
+.intro-body p{margin:0 0 12px}
+.intro-body h4{font:600 18px/1.2 var(--head);margin:16px 0 6px;color:var(--mint);letter-spacing:.03em;text-transform:uppercase}
+.intro-body h4:first-child{margin-top:0}
+.intro-foot{display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--card)}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -241,6 +254,11 @@ details .dbody p{margin:0 0 8px}
   <div class="profiles pk-chips" id="pk-chips"></div>
   <input type="search" id="pk-q" class="pk-q" placeholder="🔍 Übung suchen …" autocomplete="off" data-inp="pkQ">
   <div class="pk-list" id="pk-list"></div>
+</div>
+<div class="picker" id="intro" hidden>
+  <div class="intro-head"><div class="intro-top"><div class="dots" id="intro-dots"></div><button class="btn sm" data-act="introClose">Überspringen</button></div><div class="intro-e" id="intro-e"></div><div class="intro-t" id="intro-t"></div></div>
+  <div class="intro-body" id="intro-body"></div>
+  <div class="intro-foot"><button class="btn" id="intro-back" data-act="introPrev">‹ Zurück</button><button class="btn primary grow" id="intro-next" data-act="introNext">Weiter ›</button></div>
 </div>
 <div class="picker" id="info" hidden>
   <div class="pk-head"><div><b id="info-title"></b></div><button class="btn sm" data-act="infoClose">Schließen</button></div>
@@ -283,6 +301,14 @@ const KIND={
   frei:{e:'📝',n:'Freier Eintrag',u:'Sätze'}
 };
 const SLOT={push:'Drücken',pull:'Ziehen',legs:'Beine',schock:'Schockmethode'};
+const INTRO=[
+ {e:'👋',t:'Willkommen bei der Methode',h:`<p>Diese App begleitet dich durch ein Krafttraining, das fast jede Regel bricht, die man dir je beigebracht hat: dieselbe Bewegung fast jeden Tag, kleine Sätze über den ganzen Tag verteilt, und fast nie bis zur Erschöpfung.</p><p>Genau deshalb funktioniert es. Ein Anfänger sammelt damit in wenigen Wochen ein Trainingsvolumen, für das die meisten Leute Monate brauchen. Die sowjetischen Trainer haben so ihre stärksten Männer aufgebaut.</p><p>Du brauchst kein Studio, keine Geräte und keinen 20-seitigen Plan. Nur dein Körpergewicht, einen Stuhl, einen Tisch und ein paar Minuten, mehrmals am Tag.</p><p><b>Die App sagt dir jeden Tag, was dran ist.</b> Du musst nur tippen, wenn du einen Satz gemacht hast. Alles andere rechnet sie für dich aus.</p><p class="hint">Lesezeit für diese Einführung: etwa 5 Minuten. Du findest sie jederzeit wieder in den Einstellungen.</p>`},
+ {e:'💪',t:'Was du davon hast',h:`<h4>Nacken und Schultern</h4><p>Wer viel sitzt, fährt oder aufs Handy schaut, zieht die Schultern nach vorn und den Kopf nach unten. Die Muskeln zwischen den Schulterblättern werden lang und schwach, der Nacken hält den ganzen Tag dagegen und verspannt. Rudern, Klimmzüge und Leitern kräftigen genau diese Muskeln. Der Oberkörper richtet sich auf, der Kopf sitzt wieder über den Schultern, und die Dauerspannung im Nacken lässt nach. Viele merken das als Erstes, oft schon nach wenigen Wochen.</p><h4>Rücken</h4><p>Ein kräftiger Rumpf stützt die Wirbelsäule wie ein Korsett. Hüftheben, Split Squats und Stützübungen nehmen dem unteren Rücken Arbeit ab, die er sonst allein tragen muss.</p><h4>Alltag</h4><p>Treppen, Kisten, Kinder tragen, lange Tage auf den Beinen: Mit mehr Kraft wird alles leichter, und die Gelenke werden geschont, weil Muskeln die Stöße abfangen.</p><h4>Figur und Stoffwechsel</h4><p>Muskeln verbrauchen Energie, auch in Ruhe. Zusammen mit vernünftigem Essen hilft das beim Abnehmen. Und wenn Schultern, Brust und Rücken stärker werden, hört dein Körper auf, nach vorn einzusinken. Du stehst von selbst offener und fester. Deine Silhouette verändert sich, noch bevor der Spiegel es mitbekommt.</p><h4>Kopf</h4><p>Kleine Sätze, die du immer schaffst, bauen etwas auf, das größer ist als Muskeln: das Gefühl, dass du dich auf dich verlassen kannst.</p><p class="hint">Bei akuten Schmerzen, Bandscheibenproblemen oder nach Verletzungen vorher mit Arzt oder Physiotherapeut sprechen. Die Methode ist sanft, aber kein Ersatz für Behandlung.</p>`},
+ {e:'🧱',t:'Die sechs Bausteine',h:`<p>Die Methode besteht aus sechs Bausteinen. Alle funktionieren zu Hause, nur mit deinem Körpergewicht.</p><p><b>🔁 1 · Verteilte Sätze.</b> Du machst einmal so viele saubere Wiederholungen wie möglich. Die Hälfte davon ist deine Satzgröße. Die machst du 5 bis 8 Mal am Tag, zwischen allem anderen. Kein Satz ist ein Kampf.</p><p><b>🛑 2 · Nie bis zum Versagen.</b> Die letzte Wiederholung bleibt sauber. So bist du morgen wieder frisch, und genau diese Häufigkeit macht dich stark.</p><p><b>🪜 3 · Leitern.</b> 1 Wiederholung, Pause, 2, Pause, 3, 4, 5 und wieder von vorn. So sammelst du viel Volumen, ohne es zu merken.</p><p><b>⏱️ 4 · Dichte.</b> 15 Minuten, so viele saubere Sätze wie möglich. Nächste Woche mehr. Das ist Steigerung ohne Gewicht.</p><p><b>🌊 5 · Wellen.</b> Schwere, mittlere und leichte Tage im Wechsel. Jede vierte Woche nur das halbe Volumen, damit der Körper alles festigt.</p><p><b>⚡ 6 · Schockmethode.</b> Sprünge und explosive Liegestütze, wenige Wiederholungen, nur frisch. Damit lernt dein Körper, seine Kraft schnell einzusetzen.</p><p>Zu jedem Baustein findest du in der App einen <b>ⓘ-Knopf</b> mit der ganzen Erklärung und den typischen Fehlern.</p>`},
+ {e:'📅',t:'So sieht deine Woche aus',h:`<p><b>Montag und Donnerstag, schwer.</b> Erst fünf Minuten Schockmethode, dann Leitern für Drücken und Ziehen, zum Schluss die Beine. Dazu wie immer die verteilten Sätze über den Tag.</p><p><b>Dienstag und Freitag, mittel.</b> Ein Dichteblock von 15 Minuten mit Timer.</p><p><b>Mittwoch und Samstag, leicht.</b> Nur die verteilten Sätze. Ein paar Minuten, mehrmals am Tag.</p><p><b>Sonntag.</b> Kompletter Ruhetag. Essen, schlafen, erholen.</p><p><b>Jede vierte Woche</b> halbierst du das Volumen. Danach machst du den Maximaltest neu, und die App rechnet deine Zahlen neu. Oft steht dann ein neuer Rekord.</p><p>Du musst dir nichts davon merken. Die App zeigt dir jeden Tag die passenden Karten, mit den richtigen Zahlen.</p>`},
+ {e:'📱',t:'So hilft dir die App',h:`<p><b>Maximaltest.</b> Einmal so viele saubere Wiederholungen wie möglich, Zahl eintragen. Daraus rechnet die App Satzgröße, Leiter und Dichteblock. Zu schwer? Die App schlägt eine leichtere Stufe vor, zum Beispiel Liegestütze am Tisch statt am Boden. Zu leicht? Die nächste Stufe.</p><p><b>Heute.</b> Große Zahlen zeigen, was zu tun ist: Wiederholungen pro Satz, Sätze heute. Jeder Satz ist ein Tipp auf „＋ Satz“. Der Ring oben zeigt, wie viel vom Tag geschafft ist.</p><p><b>Übungen.</b> 385 Übungen für zu Hause, nach Muskelgruppen sortiert, jede mit Stufen von leicht bis schwer. Zu jeder gibt es ein Beispielvideo und Bilder mit den beteiligten Muskeln. Was du nicht willst, nimmst du aus deinem Plan.</p><p><b>Verlauf.</b> Wiederholungen pro Woche im Vergleich zur Vorwoche, Fortschritt im Dichteblock, alle Einträge, jederzeit änderbar.</p><p><b>Zwei Profile.</b> Jeder hat seinen eigenen Stand und seine eigenen Zahlen. Die Daten bleiben auf dem Handy. Eine Sicherung gibt es in den Einstellungen.</p>`},
+ {e:'🏁',t:'Die drei Regeln',h:`<p><b>1 · Qualität vor Zahl.</b> Wird die Wiederholung langsam, krumm oder musst du die Luft anhalten, ist der Satz vorbei. Niemand bewertet dich nach der höchsten Zahl.</p><p><b>2 · Die 15-Minuten-Regel.</b> Könntest du denselben Satz in 15 Minuten nicht genauso sauber wiederholen, war er zu groß. Streich eine oder zwei Wiederholungen.</p><p><b>3 · Das Training setzt das Signal, Essen und Schlaf bauen auf.</b> Genug Eiweiß über den Tag, genug Essen, vernünftiger Schlaf. Ohne Baumaterial wird nichts zu Muskeln.</p><p>Der häufigste Fehler ist Gier: am dritten Tag bei jedem Satz ans Limit gehen, zwei Wochen später tun die Ellbogen weh und man wirft hin. Die Methode verlangt das nie. Sie verlangt nur, dass du oft und sauber übst.</p><p><b>Und die Wahrheit ist hart:</b> Du brauchst kein Fitnessstudio, keine Maschinen und keinen Plan. Du musst aufhören, auf den perfekten Montag zu warten, und heute deinen ersten Satz machen.</p>`}
+];
 const INFO={
  gtg:{t:'Verteilte Sätze (Grease the Groove)',kurz:'Kleine Sätze über den ganzen Tag verteilt, immer die Hälfte deines Maximums, nie bis zum Versagen.',lang:`<p><b>So geht es:</b> Mach einmal so viele saubere Wiederholungen, wie du schaffst (Maximaltest). Die Hälfte davon ist deine Satzgröße. Schaffst du 12, machst du Sätze mit 6.</p><p>Ab dann machst du mehrmals am Tag einen Satz: nach dem Aufstehen, vor dem Mittagessen, am Nachmittag, vor dem Duschen. 5 bis 8 Sätze pro Tag, mindestens 15 Minuten Abstand, 5 bis 6 Tage pro Woche. Kein Aufwärmen, kein Umziehen, kein schmerzverzerrtes Gesicht.</p><p><b>Die Rechnung:</b> 6 Wiederholungen mal 8 Sätze sind 48 am Tag, fast 300 in der Woche. Wer zweimal pro Woche 3 Sätze bis zum Muskelversagen macht, kommt da nicht annähernd heran.</p><p><b>Das wichtigste Detail:</b> Jeder Satz endet mit dem Gefühl, dass noch mehr gegangen wäre. Wird die letzte Wiederholung langsam, hängt die Hüfte durch oder musst du die Luft anhalten, war der Satz zu groß. Streich eine oder zwei Wiederholungen.</p><p><b>Warum das funktioniert:</b> Kraft ist eine Fähigkeit. Dein Nervensystem lernt, mehr Muskelfasern gleichzeitig anzusteuern. Wie ein Trampelpfad über eine Wiese: Wer einmal pro Woche drüber geht, sieht bald keinen Weg mehr. Wer mehrmals täglich geht, hat nach ein paar Wochen einen festen Pfad.</p><p><b>Der häufigste Fehler:</b> Gier. Am dritten Tag bei jedem Satz ans Limit gehen. Zwei Wochen später tun die Ellbogen weh und man wirft alles hin. Regel: Könntest du denselben Satz 15 Minuten später nicht in derselben Qualität wiederholen, hast du übertrieben.</p>`},
  leiter:{t:'Leitern',kurz:'1 Wiederholung, Pause, 2, Pause, 3 … bis zur obersten Sprosse, dann wieder bei 1. Viel Volumen, kein Muskelversagen.',lang:`<p><b>So geht es:</b> Mach eine Wiederholung, pausiere ein paar Sekunden, mach 2, Pause, 3, Pause, 4, Pause, 5. Das ist eine Leiter mit 15 Wiederholungen. Dann fängst du wieder bei 1 an. Mach 3 bis 5 Leitern.</p><p><b>Die Rechnung:</b> 5 Leitern von 1 bis 5 sind 75 Liegestütze. Wer bei 12 am Stück hängen bleibt, schafft im klassischen Training kaum 75 saubere. Mit der Leiter schon, und kein Satz kommt in die Nähe des Versagens.</p><p><b>Die Pause:</b> Ein paar Mal tief durchatmen, gerade so lange, dass der nächste Satz sauber wird. Nach dem 1er fast keine Pause, nach dem 5er bis zu 30 oder 40 Sekunden.</p><p><b>Bei Klimmzügen:</b> Schaffst du nur 5, nimm Leitern von 1 bis 3. Das sind 6 pro Leiter, 5 Leitern, 30 Klimmzüge.</p><p><b>Der Fehler:</b> Die oberste Sprosse zu früh erhöhen. Wird der 5er unsauber, geht die Leiter nur bis 4. Niemand bewertet dich nach der höchsten Zahl, was zählt, ist das saubere Gesamtvolumen.</p><p><b>Der Trick im Kopf:</b> Ein Satz mit 12 bis zum Versagen fühlt sich wie eine Bedrohung an. Ein einziger Liegestütz wirkt wie ein Witz. Genau deshalb fängst du an, und bevor du es merkst, hast du 75 gemacht.</p>`},
@@ -493,6 +519,7 @@ function viewEinstellungen(){
   h+=`<button class="btn big" data-act="addExercise">＋ Übung anlegen</button>`;
   h+=`<h2>Daten</h2><div class="card"><div class="hint" style="margin-bottom:10px">Alle Daten liegen nur auf diesem Gerät. Für den Wechsel aufs andere Handy oder als Sicherung: Datei speichern und dort laden.</div><div class="row"><button class="btn grow" data-act="export">💾 Sicherung speichern</button><button class="btn grow" data-act="import">📂 Sicherung laden</button></div><div class="row" style="margin-top:10px">${UI.sure==='wipe'?'<button class="btn danger sure grow" data-act="wipe">Wirklich alles löschen?</button>':'<button class="btn danger grow" data-act="wipe">🗑 Alle Daten löschen</button>'}</div></div>`;
   h+=`<h2>Aufs iPhone</h2><div class="card hint">In Safari unten auf <b>Teilen</b> (Quadrat mit Pfeil) → <b>Zum Home-Bildschirm</b>. Dann liegt „Methode“ wie eine App auf dem Handy, mit eigenem Speicher.</div>`;
+  h+=`<h2>Einführung</h2><div class="card"><div class="hint" style="margin-bottom:10px">Worum es geht, was du davon hast, wie die Woche aussieht. Etwa 5 Minuten Lesezeit, sechs Seiten zum Durchblättern.</div><button class="btn big primary" data-act="introOpen">📖 Einführung ansehen</button></div>`;
   h+=`<h2>Die Methode in Kurzform</h2>`+ANLEITUNG;
   return h;
 }
@@ -632,6 +659,11 @@ function pickDone(id){const t=PK.target;$('#picker').hidden=true;
   if(t==='f-ex'&&M&&M.type==='test')CHG.testEx({value:id});
   if(t==='f-ex'&&M&&M.type==='entry')applyKind(val('f-kind'));}
 
+let introPage=0;
+function openIntro(n){introPage=n||0;renderIntro();$('#intro').hidden=false;}
+function renderIntro(){const pg=INTRO[introPage];$('#intro-dots').innerHTML=INTRO.map((_,i)=>`<i class="${i===introPage?'on':''}" data-act="introGo" data-n="${i}"></i>`).join('');$('#intro-e').textContent=pg.e;$('#intro-t').textContent=pg.t;$('#intro-body').innerHTML=pg.h;$('#intro-body').scrollTop=0;
+  $('#intro-back').hidden=introPage===0;const last=introPage===INTRO.length-1;$('#intro-next').textContent=last?'🏁 Los geht’s':'Weiter ›';}
+function closeIntro(){$('#intro').hidden=true;if(!S.introSeen){S.introSeen=true;save();}}
 function openInfo(k){const i=INFO[k];if(!i)return;$('#info-title').textContent=i.t;$('#info-kurz').textContent=i.kurz;$('#info-body').innerHTML=i.lang;$('#info').hidden=false;$('#info-body').scrollTop=0;}
 const infoBtn=k=>INFO[k]?`<button type="button" class="ci" data-act="info" data-k="${k}" title="Erklärung">ⓘ</button>`:'';
 
@@ -666,6 +698,11 @@ const ACT={
   kindSel:el=>applyKind(el.dataset.k),
   info:el=>openInfo(el.dataset.k),
   infoClose:()=>{$('#info').hidden=true;},
+  introOpen:()=>openIntro(0),
+  introClose:()=>closeIntro(),
+  introPrev:()=>{if(introPage>0){introPage--;renderIntro();}},
+  introNext:()=>{if(introPage<INTRO.length-1){introPage++;renderIntro();}else{closeIntro();const p=prof();if(!S.tests.some(t=>t.pid===p.id)){UI.view='heute';render();testModal(null,p.push);}}},
+  introGo:el=>{introPage=+el.dataset.n;renderIntro();},
   entInc:el=>{const l=S.log.find(x=>x.id===el.dataset.id);if(!l)return;l.sets=(+l.sets||0)+1;save();render();},
   entDec:el=>{const l=S.log.find(x=>x.id===el.dataset.id);if(!l)return;l.sets=Math.max(0,(+l.sets||0)-1);save();render();},
   blockOff:el=>{const p=prof();p.off=p.off||{};p.off[el.dataset.key]=true;save();render();toast('Aus dem Plan genommen – unten „wieder rein“ oder im Profil');},
@@ -696,8 +733,9 @@ document.addEventListener('input',e=>{const el=e.target.closest('[data-inp="pkQ"
 document.addEventListener('change',e=>{const el=e.target.closest('[data-chg]');if(!el)return;const f=CHG[el.dataset.chg];if(f)f(el);});
 $('#modal').addEventListener('click',e=>{if(e.target===$('#modal'))closeModal();});
 window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(v&&v!==UI.view){UI.view=v;render();}});
-window.METHODE={state:()=>S,ui:UI,render,dayPlan,numbers,cycle};
+window.METHODE={state:()=>S,ui:UI,render,dayPlan,numbers,cycle,openIntro};
 render();
+if(!S.introSeen)openIntro(0);
 })();
 </script>
 </body>
