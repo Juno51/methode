@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Methode">
-<meta name="theme-color" content="#f6f3ee">
+<meta name="theme-color" content="#0f1116">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
@@ -17,13 +17,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap">
 <style>
 :root{
-  --bg:#f6f3ee; --card:#ffffff; --ink:#1c1b1a; --muted:#6f6a63; --line:#e4ddd2;
-  --accent:#b4231f; --accent-dark:#8d1b18; --accent-soft:#fbe9e7;
-  --ok:#1f7f4f; --ok-soft:#e2f3ea; --warn:#9a5600; --warn-soft:#fff1dc;
-  --blue:#1f4e8c; --blue-soft:#e5eefb;
+  --bg:#0f1116; --card:#181b22; --card2:#232833; --ink:#f4f5f8; --muted:#9aa1b0; --line:#2b313d;
+  --mint:#8fe6d0; --mint2:#b7f1e2; --lav:#bcaaff; --lav2:#d7ccff;
+  --accent:var(--mint); --accent-dark:#0f1116; --accent-soft:rgba(143,230,208,.14);
+  --ok:#8ff0a0; --ok-soft:rgba(143,240,160,.14); --warn:#ffd36a; --warn-soft:rgba(255,211,106,.13);
+  --blue:var(--lav); --blue-soft:rgba(188,170,255,.16); --danger:#ff7b72;
+  --grad:linear-gradient(135deg,#a9f0dc 0%,#c7b8ff 100%);
   --head:"Oswald","Arial Narrow",-apple-system,sans-serif;
   --body:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg);margin:0;height:100%}
@@ -31,127 +33,145 @@ body{color:var(--ink);font:17px/1.45 var(--body);-webkit-text-size-adjust:100%;o
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 h1,h2,h3{margin:0;font-family:var(--head);text-wrap:balance}
-h2{font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
-a{color:var(--blue)}
-.top{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;border-bottom:1px solid var(--line)}
+h2{font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+a{color:var(--lav)}
+.top{position:sticky;top:0;z-index:20;background:rgba(15,17,22,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;border-bottom:1px solid var(--line)}
 .topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand{font:700 22px/1 var(--head);letter-spacing:.06em;color:var(--accent);text-transform:uppercase}
-.brand small{display:block;font:600 11px/1.2 var(--body);letter-spacing:.12em;color:var(--muted);margin-top:3px}
+.brand{font:700 24px/1 var(--head);letter-spacing:.06em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;font:600 11px/1.2 var(--body);letter-spacing:.14em;color:var(--muted);margin-top:4px;-webkit-text-fill-color:var(--muted)}
 .profiles{display:flex;gap:8px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}
 .profiles::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:15px;font-weight:600;color:var(--muted)}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-main{max-width:640px;margin:0 auto;padding:12px 16px calc(96px + env(safe-area-inset-bottom,0px))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;min-width:0}
-.card.soft{background:var(--accent-soft);border-color:#f1cfcc}
-.card.warn{background:var(--warn-soft);border-color:#f3dcb8}
-.card.ok{background:var(--ok-soft);border-color:#bfe3cf}
-.card.blue{background:var(--blue-soft);border-color:#c9d9f1}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card2);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600;color:var(--muted)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+main{max-width:640px;margin:0 auto;padding:12px 16px calc(100px + env(safe-area-inset-bottom,0px))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;min-width:0}
+.card.soft{background:var(--accent-soft);border-color:rgba(143,230,208,.35)}
+.card.warn{background:var(--warn-soft);border-color:rgba(255,211,106,.35)}
+.card.ok{background:var(--ok-soft);border-color:rgba(143,240,160,.35)}
+.card.blue{background:var(--blue-soft);border-color:rgba(188,170,255,.4)}
+.card.hero{background:var(--grad);color:#0f1116;border:0;box-shadow:0 10px 30px rgba(143,230,208,.15)}
+.hero .sub,.hero .hint{color:rgba(15,17,22,.72)}
+.hero a{color:#0f1116;font-weight:700}
+.hero .pill,.hero .pill.red,.hero .pill.blue,.hero .pill.green{background:rgba(15,17,22,.14);color:#0f1116}
+.hero .ci{background:rgba(15,17,22,.14);color:#0f1116}
+.herorow{display:flex;align-items:center;gap:12px}
+.herorow .dayhead{flex:1;min-width:0}
+.ring{flex:0 0 auto;width:84px;height:84px;position:relative}
+.ring svg{width:84px;height:84px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .tr{stroke:rgba(15,17,22,.14)}
+.ring .pr{stroke:#0f1116;transition:stroke-dashoffset .4s}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 20px/1 var(--head);font-variant-numeric:tabular-nums}
+.ring small{position:absolute;left:0;right:0;bottom:-16px;text-align:center;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(15,17,22,.7)}
 .dayhead{display:flex;align-items:center;gap:12px}
 .dayhead .big{font:700 30px/1 var(--head);text-transform:uppercase;letter-spacing:.02em}
-.dayhead .sub{color:var(--muted);font-size:15px;margin-top:4px}
+.dayhead .sub{font-size:15px;margin-top:4px}
 .dayhead .em{font-size:34px;line-height:1}
 .week{display:grid;grid-template-columns:34px repeat(7,1fr) 34px;gap:3px;align-items:center;margin:4px 0 12px}
-.day{border:0;background:transparent;border-radius:12px;padding:6px 0 5px;text-align:center;font-size:12px;color:var(--muted);line-height:1.1}
+.day{border:0;background:transparent;border-radius:14px;padding:7px 0 6px;text-align:center;font-size:12px;color:var(--muted);line-height:1.1}
 .day b{display:block;font:600 18px/1.2 var(--head);color:var(--ink)}
-.day.sel{background:var(--accent);color:#fff}
-.day.sel b{color:#fff}
-.day.today{box-shadow:inset 0 0 0 2px var(--accent)}
-.day .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);margin:3px auto 0;opacity:0}
+.day.sel{background:var(--mint);color:#0f1116}
+.day.sel b{color:#0f1116}
+.day.today{box-shadow:inset 0 0 0 2px var(--mint)}
+.day .dot{width:6px;height:6px;border-radius:50%;background:var(--lav);margin:3px auto 0;opacity:0}
 .day .dot.on{opacity:1}
-.day.sel .dot.on{background:#fff}
+.day.sel .dot.on{background:#0f1116}
 .arrow{border:0;background:transparent;font-size:26px;color:var(--muted);padding:4px 0}
 .bh{display:flex;gap:12px;align-items:flex-start}
 .be{font-size:28px;line-height:1.1;flex:0 0 auto}
-.bt{font:600 20px/1.2 var(--head)}
+.bt{font:600 21px/1.2 var(--head)}
 .bs{color:var(--muted);font-size:15px;margin-top:3px}
 .bx{color:var(--muted);font-size:14px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
-.rx{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.rx div{background:var(--bg);border-radius:14px;padding:10px 8px;text-align:center;min-width:0}
-.rx b{display:block;font:700 40px/1 var(--head);font-variant-numeric:tabular-nums;letter-spacing:.01em}
-.rx .main{background:var(--accent-soft)}
-.rx .main b{color:var(--accent-dark)}
+.rx{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.rx div{background:var(--card2);border-radius:18px;padding:12px 8px;text-align:center;min-width:0}
+.rx b{display:block;font:700 42px/1 var(--head);font-variant-numeric:tabular-nums;letter-spacing:.01em;color:var(--lav2)}
+.rx .main{background:var(--grad)}
+.rx .main b{color:#0f1116}
+.rx .main span{color:rgba(15,17,22,.72)}
 .rx span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;line-height:1.2}
-.line{font-size:15px;color:var(--ink);margin-top:10px;font-weight:600}
+.line{font-size:15px;color:var(--ink);margin-top:12px;font-weight:600}
 .tip{margin-top:8px;border:0;padding:0;background:transparent}
 .tip summary{padding:6px 0;font-size:14px;color:var(--muted);font-weight:600}
 .tip summary::after{content:""}
 .tip .dbody{font-size:14px;color:var(--muted);padding:0 0 4px}
-.counter{display:flex;align-items:center;gap:10px;margin-top:12px}
-.rbtn{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:28px;line-height:1;flex:0 0 auto}
+.counter{display:flex;align-items:center;gap:10px;margin-top:14px}
+.rbtn{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--card2);color:var(--ink);font-size:28px;line-height:1;flex:0 0 auto}
 .rbtn:disabled{opacity:.35}
-.cnum{font:700 36px/1 var(--head);min-width:74px;text-align:center;font-variant-numeric:tabular-nums}
+.cnum{font:700 38px/1 var(--head);min-width:74px;text-align:center;font-variant-numeric:tabular-nums}
 .cnum small{display:block;font:600 13px/1 var(--body);color:var(--muted);margin-top:5px}
-.btn{min-height:48px;border-radius:12px;font-size:17px;font-weight:600;padding:0 16px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
-.btn.blue{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn.danger{color:var(--accent);border-color:#efc5c2;background:#fff}
-.btn.danger.sure{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn{min-height:48px;border-radius:14px;font-size:17px;font-weight:600;padding:0 16px;border:1px solid var(--line);background:var(--card2);color:var(--ink)}
+.btn.primary{background:var(--mint);color:#0f1116;border-color:var(--mint)}
+.btn.ok{background:var(--ok);color:#0f1116;border-color:var(--ok)}
+.btn.blue{background:var(--lav);color:#0f1116;border-color:var(--lav)}
+.btn.danger{color:var(--danger);border-color:rgba(255,123,114,.4);background:transparent}
+.btn.danger.sure{background:var(--danger);color:#0f1116;border-color:var(--danger)}
 .btn.big{width:100%;min-height:54px}
 .btn.grow{flex:1}
 .btn.sm{min-height:38px;font-size:15px;padding:0 12px}
 .btn:disabled{opacity:.45}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .row > *{min-width:0}
-.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:12px}
-.bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
-.bar i.ok{background:var(--ok)}
-.field{margin-bottom:12px;min-width:0}
-.field label{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;font-size:17px;min-height:48px}
+.bar{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;background:var(--lav);transition:width .2s}
+.bar i.ok{background:var(--mint)}
+.field{margin-bottom:14px;min-width:0}
+.field label{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:14px;padding:12px;font-size:17px;min-height:48px}
 .field textarea{min-height:80px;resize:vertical}
-.field input[type=checkbox]{width:24px;height:24px;min-height:0;vertical-align:middle;margin-right:8px}
+.field input[type=checkbox]{width:24px;height:24px;min-height:0;vertical-align:middle;margin-right:8px;accent-color:var(--mint)}
 .field.inline label{display:inline;text-transform:none;letter-spacing:0;font-size:16px;font-weight:600;color:var(--ink)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sel{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font-size:16px;min-height:46px;margin-top:10px}
-.timer{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--bg);border-radius:14px;padding:10px 12px}
+.sel{width:100%;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:14px;padding:10px 12px;font-size:16px;min-height:46px;margin-top:12px}
+.timer{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--card2);border-radius:18px;padding:10px 12px}
 .tdisp{font:700 40px/1 var(--head);font-variant-numeric:tabular-nums;min-width:110px}
-.tdisp.done{color:var(--ok)}
+.tdisp.done{color:var(--mint)}
 .list .item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);color:inherit;text-decoration:none}
 .list .item:first-child{border-top:0}
 .item .ie{font-size:24px;flex:0 0 32px;text-align:center}
 .item .it{flex:1;min-width:0}
 .item .it b{display:block;font-weight:600}
 .item .it span{color:var(--muted);font-size:14px}
-.item .iv{font:700 22px/1 var(--head);font-variant-numeric:tabular-nums;text-align:right;flex:0 0 auto}
+.item .iv{font:700 22px/1 var(--head);font-variant-numeric:tabular-nums;text-align:right;flex:0 0 auto;color:var(--mint2)}
 .item .iv small{display:block;font:600 12px/1 var(--body);color:var(--muted);margin-top:4px}
-.datehead{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 4px}
+.datehead{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 6px}
 .datehead b{font:600 17px/1.2 var(--head);text-transform:uppercase;letter-spacing:.04em}
 .datehead span{color:var(--muted);font-size:13px}
-.pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700;background:var(--bg);color:var(--muted)}
-.pill.red{background:var(--accent-soft);color:var(--accent-dark)}
+.pill{display:inline-block;border-radius:999px;padding:4px 11px;font-size:13px;font-weight:700;background:var(--card2);color:var(--muted)}
+.pill.red{background:var(--accent-soft);color:var(--mint)}
 .pill.green{background:var(--ok-soft);color:var(--ok)}
-.pill.blue{background:var(--blue-soft);color:var(--blue)}
+.pill.blue{background:var(--blue-soft);color:var(--lav2)}
 .hint{color:var(--muted);font-size:14px}
 .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kpi .k{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
-.kpi .k b{display:block;font:700 28px/1 var(--head);font-variant-numeric:tabular-nums}
+.kpi .k{border-radius:20px;padding:14px;background:var(--card);border:1px solid var(--line)}
+.kpi .k b{display:block;font:700 30px/1 var(--head);font-variant-numeric:tabular-nums}
 .kpi .k span{font-size:13px;color:var(--muted)}
+.kpi .k.k1{background:var(--grad);border:0;color:#0f1116}.kpi .k.k1 span{color:rgba(15,17,22,.72)}
+.kpi .k.k2{background:var(--lav);border:0;color:#0f1116}.kpi .k.k2 span{color:rgba(15,17,22,.72)}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
 th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-top:0}
 td.num,th.num{text-align:right}
-.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding:4px 0 env(safe-area-inset-bottom,0px);z-index:30}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;background:rgba(21,24,31,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 0 env(safe-area-inset-bottom,0px);z-index:30}
 .tab{flex:1;border:0;background:transparent;padding:6px 0 7px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);line-height:1.1}
 .tab i{display:block;font-style:normal;font-size:24px;margin-bottom:3px}
-.tab.on{color:var(--accent)}
-.modal-wrap{position:fixed;inset:0;background:rgba(20,15,10,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50}
-.modal{background:#fff;width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.tab.on{color:var(--mint)}
+.tab-plus{flex:0 0 76px;padding:0 0 8px}
+.tab-plus i{width:58px;height:58px;margin:-26px auto 0;border-radius:50%;background:var(--grad);color:#0f1116;font-size:34px;line-height:58px;box-shadow:0 8px 24px rgba(143,230,208,.35);font-weight:700}
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.modal{background:var(--card);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
 .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .mhead h3{font-size:22px;font-weight:600}
 .mfoot{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:15px;font-weight:600;z-index:60;max-width:90%;text-align:center}
-details{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:0 14px;margin-bottom:12px}
-details summary{padding:12px 0;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--mint);color:#0f1116;padding:10px 16px;border-radius:999px;font-size:15px;font-weight:700;z-index:60;max-width:90%;text-align:center}
+details{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:0 14px;margin-bottom:12px}
+details summary{padding:12px 0;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details summary::after{content:"＋";color:var(--muted)}
 details[open] summary::after{content:"－"}
-details .dbody{padding:0 0 12px;color:#333;font-size:15px}
+details .dbody{padding:0 0 12px;color:var(--muted);font-size:15px}
 details .dbody p{margin:0 0 8px}
 .ladder{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.ladder span{background:var(--bg);border-radius:8px;padding:6px 10px;font:600 15px/1 var(--head)}
-.ladder span.top{background:var(--accent-soft);color:var(--accent-dark)}
-
+.ladder span{background:var(--card2);border-radius:10px;padding:6px 10px;font:600 15px/1 var(--head)}
+.ladder span.top{background:var(--accent-soft);color:var(--mint)}
 .pick{display:flex;align-items:center;gap:10px;text-align:left;width:100%}
 .pick .pk-name{display:block;font-weight:600;line-height:1.2}
 .pick small{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
@@ -161,28 +181,35 @@ details .dbody p{margin:0 0 8px}
 .pk-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px}
 .pk-head b{font:600 22px/1.2 var(--head)}
 .pk-chips{padding:6px 16px 8px}
-.pk-q{margin:0 16px 8px;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:17px;background:#fff;-webkit-appearance:none}
-.pk-list{flex:1;overflow-y:auto;border-top:1px solid var(--line);background:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}
+.pk-q{margin:0 16px 8px;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:17px;background:var(--card2);color:var(--ink);-webkit-appearance:none}
+.pk-list{flex:1;overflow-y:auto;border-top:1px solid var(--line);background:var(--card);padding-bottom:env(safe-area-inset-bottom,0px)}
+.pk-item{display:flex;align-items:center;gap:8px;width:100%;border-bottom:1px solid var(--line);background:var(--card);padding:0 8px 0 0}
 .pk-item.on{background:var(--accent-soft)}
-
+.pk-main{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:12px 16px;color:var(--ink)}
+.pk-main b{display:block;font-weight:600}
+.pk-main span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.pk-yt{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:18px;background:var(--card2)}
 .np{display:flex;align-items:center;gap:8px}
-.np-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:26px;line-height:1;flex:0 0 auto}
+.np-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card2);color:var(--ink);font-size:26px;line-height:1;flex:0 0 auto}
 .np-strip{flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
 .np-strip::-webkit-scrollbar{display:none}
 .np-track{display:flex;padding:0 calc(50% - 28px)}
-.np-cell{flex:0 0 56px;height:58px;display:flex;align-items:center;justify-content:center;font:600 20px/1 var(--head);color:var(--muted);border-radius:12px;border:0;background:transparent;padding:0}
-.np-cell.on{color:var(--accent-dark);font-size:34px;background:var(--accent-soft)}
+.np-cell{flex:0 0 56px;height:58px;display:flex;align-items:center;justify-content:center;font:600 20px/1 var(--head);color:var(--muted);border-radius:14px;border:0;background:transparent;padding:0}
+.np-cell.on{color:#0f1116;font-size:34px;background:var(--mint)}
 .np-hint{font-size:13px;color:var(--muted);margin-top:4px}
 .kinds{padding:0 0 4px}
 .kinds .chip{font-size:15px;padding:9px 13px}
-.kinds .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.kinds .chip.on{background:var(--mint);border-color:var(--mint);color:#0f1116}
 .demo{margin-top:8px}
 .demo .btn{text-decoration:none;display:inline-flex;align-items:center}
-.pk-item{display:flex;align-items:center;gap:8px;width:100%;border-bottom:1px solid var(--line);background:#fff;padding:0 8px 0 0}
-.pk-main{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:12px 16px}
-.pk-main b{display:block;font-weight:600}
-.pk-main span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
-.pk-yt{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:18px;background:var(--bg)}
+.ci{border:0;background:var(--blue-soft);color:var(--lav2);border-radius:50%;width:28px;height:28px;font:700 15px/28px var(--body);display:inline-flex;align-items:center;justify-content:center;padding:0;margin-left:6px;vertical-align:middle;cursor:pointer;flex:0 0 auto;font-style:normal}
+.bh .ci{margin-left:auto}
+.chip .ci{width:22px;height:22px;font-size:13px;line-height:22px;margin-left:4px}
+.chip.on .ci{background:rgba(15,17,22,.15);color:#0f1116}
+.kinfo{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.45}
+.info-body{flex:1;overflow-y:auto;padding:4px 16px 24px;font-size:16px;line-height:1.5;background:var(--card);border-top:1px solid var(--line)}
+.info-body p{margin:0 0 12px}
+.info-kurz{font-weight:600;color:var(--ink);padding:10px 16px 12px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -198,6 +225,7 @@ details .dbody p{margin:0 0 8px}
 <nav class="tabs" id="tabs">
   <button class="tab" data-act="go" data-view="heute"><i>📅</i>Heute</button>
   <button class="tab" data-act="go" data-view="verlauf"><i>📈</i>Verlauf</button>
+  <button class="tab tab-plus" data-act="newEntry" data-nav="1" aria-label="Neuer Eintrag"><i>＋</i></button>
   <button class="tab" data-act="go" data-view="tests"><i>🧪</i>Tests</button>
   <button class="tab" data-act="go" data-view="einstellungen"><i>⚙️</i>Einstellungen</button>
 </nav>
@@ -213,6 +241,11 @@ details .dbody p{margin:0 0 8px}
   <div class="profiles pk-chips" id="pk-chips"></div>
   <input type="search" id="pk-q" class="pk-q" placeholder="🔍 Übung suchen …" autocomplete="off" data-inp="pkQ">
   <div class="pk-list" id="pk-list"></div>
+</div>
+<div class="picker" id="info" hidden>
+  <div class="pk-head"><div><b id="info-title"></b></div><button class="btn sm" data-act="infoClose">Schließen</button></div>
+  <div class="info-kurz" id="info-kurz"></div>
+  <div class="info-body" id="info-body"></div>
 </div>
 <input type="file" id="importFile" accept=".json,application/json" data-chg="importFile" hidden>
 <script>
@@ -250,6 +283,16 @@ const KIND={
   frei:{e:'📝',n:'Freier Eintrag',u:'Sätze'}
 };
 const SLOT={push:'Drücken',pull:'Ziehen',legs:'Beine',schock:'Schockmethode'};
+const INFO={
+ gtg:{t:'Verteilte Sätze (Grease the Groove)',kurz:'Kleine Sätze über den ganzen Tag verteilt, immer die Hälfte deines Maximums, nie bis zum Versagen.',lang:`<p><b>So geht es:</b> Mach einmal so viele saubere Wiederholungen, wie du schaffst (Maximaltest). Die Hälfte davon ist deine Satzgröße. Schaffst du 12, machst du Sätze mit 6.</p><p>Ab dann machst du mehrmals am Tag einen Satz: nach dem Aufstehen, vor dem Mittagessen, am Nachmittag, vor dem Duschen. 5 bis 8 Sätze pro Tag, mindestens 15 Minuten Abstand, 5 bis 6 Tage pro Woche. Kein Aufwärmen, kein Umziehen, kein schmerzverzerrtes Gesicht.</p><p><b>Die Rechnung:</b> 6 Wiederholungen mal 8 Sätze sind 48 am Tag, fast 300 in der Woche. Wer zweimal pro Woche 3 Sätze bis zum Muskelversagen macht, kommt da nicht annähernd heran.</p><p><b>Das wichtigste Detail:</b> Jeder Satz endet mit dem Gefühl, dass noch mehr gegangen wäre. Wird die letzte Wiederholung langsam, hängt die Hüfte durch oder musst du die Luft anhalten, war der Satz zu groß. Streich eine oder zwei Wiederholungen.</p><p><b>Warum das funktioniert:</b> Kraft ist eine Fähigkeit. Dein Nervensystem lernt, mehr Muskelfasern gleichzeitig anzusteuern. Wie ein Trampelpfad über eine Wiese: Wer einmal pro Woche drüber geht, sieht bald keinen Weg mehr. Wer mehrmals täglich geht, hat nach ein paar Wochen einen festen Pfad.</p><p><b>Der häufigste Fehler:</b> Gier. Am dritten Tag bei jedem Satz ans Limit gehen. Zwei Wochen später tun die Ellbogen weh und man wirft alles hin. Regel: Könntest du denselben Satz 15 Minuten später nicht in derselben Qualität wiederholen, hast du übertrieben.</p>`},
+ leiter:{t:'Leitern',kurz:'1 Wiederholung, Pause, 2, Pause, 3 … bis zur obersten Sprosse, dann wieder bei 1. Viel Volumen, kein Muskelversagen.',lang:`<p><b>So geht es:</b> Mach eine Wiederholung, pausiere ein paar Sekunden, mach 2, Pause, 3, Pause, 4, Pause, 5. Das ist eine Leiter mit 15 Wiederholungen. Dann fängst du wieder bei 1 an. Mach 3 bis 5 Leitern.</p><p><b>Die Rechnung:</b> 5 Leitern von 1 bis 5 sind 75 Liegestütze. Wer bei 12 am Stück hängen bleibt, schafft im klassischen Training kaum 75 saubere. Mit der Leiter schon, und kein Satz kommt in die Nähe des Versagens.</p><p><b>Die Pause:</b> Ein paar Mal tief durchatmen, gerade so lange, dass der nächste Satz sauber wird. Nach dem 1er fast keine Pause, nach dem 5er bis zu 30 oder 40 Sekunden.</p><p><b>Bei Klimmzügen:</b> Schaffst du nur 5, nimm Leitern von 1 bis 3. Das sind 6 pro Leiter, 5 Leitern, 30 Klimmzüge.</p><p><b>Der Fehler:</b> Die oberste Sprosse zu früh erhöhen. Wird der 5er unsauber, geht die Leiter nur bis 4. Niemand bewertet dich nach der höchsten Zahl, was zählt, ist das saubere Gesamtvolumen.</p><p><b>Der Trick im Kopf:</b> Ein Satz mit 12 bis zum Versagen fühlt sich wie eine Bedrohung an. Ein einziger Liegestütz wirkt wie ein Witz. Genau deshalb fängst du an, und bevor du es merkst, hast du 75 gemacht.</p>`},
+ dichte:{t:'Dichteblock',kurz:'15 Minuten, eine Übung, feste Satzgröße: so viele saubere Sätze wie möglich. Nächste Woche mehr.',lang:`<p><b>So geht es:</b> Timer auf 15 Minuten. Eine Übung, eine angenehme Satzgröße, zum Beispiel 5 Bulgarian Split Squats pro Bein. In den 15 Minuten machst du so viele saubere Sätze wie möglich und pausierst, solange du brauchst. Die Gesamtzahl merken.</p><p><b>Nächste Woche:</b> gleiche Übung, gleiche Zeit, gleiche Satzgröße, Ziel: mehr Sätze. Das ist Steigerung ganz ohne Gewicht. Du hast mehr Arbeit in dasselbe Zeitfenster gepackt, und dafür muss sich dein Körper anpassen: ausdauerndere Muskeln, schnellere Erholung, bessere Technik.</p><p><b>Der Fehler:</b> Die Eile zerstört den Bewegungsumfang. Läuft die Uhr, geht man nur halb runter und glaubt, besser geworden zu sein. Ist man nicht, man hat geschummelt. Ist die Bewegung kürzer geworden, zählt der Satz nicht.</p><p><b>Fortschrittstest:</b> Kommst du in einem Monat in denselben 15 Minuten von 12 auf 16 Sätze, brauchst du keinen Spiegel, um zu wissen, dass du stärker bist.</p>`},
+ schock:{t:'Schockmethode',kurz:'Sprünge und explosive Liegestütze: wenige Wiederholungen, volle Pause, nur frisch, höchstens zweimal pro Woche.',lang:`<p><b>Die Idee:</b> Eine schnelle Landung zwingt den Muskel zum Abbremsen, dann explodiert er sofort in die Gegenrichtung. Das trainiert die schnellen Muskelfasern, die das größte Potenzial für Kraft und Wachstum haben.</p><p><b>Drei Stufen:</b> 1. Jump Squats: in angenehme Tiefe gehen, explosiv hochspringen, weich landen, Knie über den Zehenspitzen. 2. Explosive Liegestütze: kontrolliert runter, so kraftvoll hochdrücken, dass die Hände kurz abheben. Geht das noch nicht, Hände auf Sofa oder Bank. 3. Erst nach ein paar Wochen: Niedersprung von einer 30 cm hohen Stufe, landen und sofort so hoch springen wie möglich. Stell dir vor, der Boden ist eine heiße Herdplatte.</p><p><b>Die Regeln:</b> 3 bis 5 Wiederholungen pro Satz, 3 bis 5 Sätze, 1 bis 2 Minuten Pause, höchstens zweimal pro Woche, immer am Anfang des Trainings. Verliert eine Wiederholung ihre Explosivität, ist der Satz vorbei.</p><p><b>Der Fehler:</b> Aus den Sprüngen ein Konditionstraining machen, 15 oder 20 am Stück bis die Lunge brennt. Das macht müde, trainiert aber keine Explosivität. Müde Sprünge sind keine Schockmethode, sondern eine kreative Art, sich den Knöchel zu verstauchen.</p>`},
+ split:{t:'Beine an schweren Tagen',kurz:'Bulgarian Split Squats mit 1 bis 3 Wiederholungen in Reserve. Jedes Bein trägt allein einen großen Teil deines Gewichts.',lang:`<p><b>Ausführung:</b> Hinterer Fuß auf Stuhl oder Sofa, der vordere steht ein gutes Stück weiter vorn. Runtergehen, bis das hintere Knie fast den Boden berührt. Wackelt es, Hand an die Wand: Du trainierst deine Beine, du probst keine Zirkusnummer.</p><p><b>Warum diese Übung:</b> Jedes Bein arbeitet allein mit einem großen Teil deines Körpergewichts. Für einen Anfänger ist das mehr als genug Last, damit Oberschenkel und Gesäß richtig brennen.</p><p><b>Wiederholungen in Reserve:</b> An schweren Tagen hörst du auf, wenn du noch 1 bis 3 Wiederholungen schaffen würdest. Da ist der Wachstumsreiz schon hoch, aber die Ermüdung zerstört deine Erholung noch nicht. Die gequälte letzte Wiederholung, bei der du den Körper verdrehst, bringt dem Nervensystem nur die falsche Bewegung bei.</p>`},
+ frei:{t:'Freier Eintrag',kurz:'Alles, was nicht im Plan steht: trag ein, was du gemacht hast, damit es im Verlauf mitzählt.',lang:`<p>Ein freier Eintrag ist für alles, was dein Plan heute nicht vorsieht: eine zusätzliche Übung, Boxtraining, ein Spaziergang mit Kniebeugen zwischendurch. Wähle die Übung, zähle die Sätze, fertig. Die Wiederholungen landen im Verlauf.</p><p>Soll eine Übung jeden Tag automatisch erscheinen, nimm sie in deinen Plan: unten auf „Heute“ bei „Aus deinem Plan genommen“ auf „wieder rein“ tippen, oder im Profil das Häkchen setzen. Dann braucht sie einmal einen Maximaltest und die App rechnet die Satzgröße aus.</p>`},
+ welle:{t:'Die Woche: Belastung in Wellen',kurz:'Zwei schwere Tage, zwei mittlere, zwei leichte, ein Ruhetag. Jede vierte Woche halbes Volumen.',lang:`<p><b>Die Idee:</b> Der Körper reagiert nicht gut auf ständige Maximalbelastung, er reagiert auf Abwechslung. Harte Tage, mittlere Tage, leichte Tage. Aufbauwochen und leichtere Wochen, in denen der Körper die Arbeit verarbeitet.</p><p><b>Montag und Donnerstag, schwer:</b> Erst 5 Minuten Schockmethode, dann Leitern für Drücken und Ziehen mit der schwersten Stufe, die du sauber kannst, zum Schluss Bulgarian Split Squats.</p><p><b>Dienstag und Freitag, mittel:</b> Ein Dichteblock von 15 Minuten.</p><p><b>Mittwoch und Samstag, leicht:</b> Nur die verteilten Sätze über den Tag.</p><p><b>Sonntag:</b> kompletter Ruhetag.</p><p><b>Jede vierte Woche:</b> Volumen halbieren, Technik sauber halten. Das ist keine Zeitverschwendung, sondern die Woche, in der der Körper alles festigt. Oft steht danach ein neuer Rekord im Test. Danach machst du den Maximaltest neu und die App rechnet deine Satzgrößen neu.</p><p><b>Schwerer ohne Gewicht:</b> Statt Hantelscheiben veränderst du die Hebel, vergrößerst den Bewegungsumfang, trainierst einseitig, baust Pausen ein oder gehst langsamer runter. Ein Liegestütz mit 3 Sekunden Abwärtsphase und 2 Sekunden Pause unten ist eine völlig andere Übung.</p><p><b>Übertraining?</b> Entsteht selten durch die Häufigkeit allein, sondern durch Häufigkeit plus Maximalintensität plus schlechte Erholung. Der Großteil deines Trainings ist weit weg vom Versagen. Und: Genug Eiweiß, genug Essen, vernünftiger Schlaf. Das Training setzt das Signal, Essen und Erholung bauen auf.</p>`},
+ test:{t:'Maximaltest',kurz:'So viele saubere Wiederholungen wie möglich. Daraus rechnet die App alles: Satzgröße, Leiter, Dichteblock.',lang:`<p><b>So geht es:</b> Mach so viele Wiederholungen mit sauberer Technik, wie du schaffst. Bei Liegestützen: Körper in einer Linie, Brust fast bis zum Boden, oben die Arme ganz durchstrecken. Die Zahl merken und eintragen.</p><p><b>Was die App daraus macht:</b> Die Hälfte ist die Satzgröße für die verteilten Sätze. Die oberste Sprosse der Leiter liegt zwischen 1 und 5. Der Dichteblock nutzt die gleiche Satzgröße.</p><p><b>Wann neu testen:</b> Nach jeder leichten Woche, also alle vier Wochen. Die App erinnert dich daran.</p><p><b>Zu schwer oder zu leicht:</b> Schaffst du noch keine 5 Liegestütze auf dem Boden, fang mit den Händen auf Tisch oder Wand an. Je aufrechter, desto leichter. Über die Wochen gehst du mit der Höhe runter. Schaffst du über 20, nimm beim nächsten Test die nächste Stufe. Die Methode bleibt dieselbe, nur dein Startpunkt ist ein anderer.</p>`}
+};
 const BLOCKS={'gtg|push':'Verteilte Sätze Drücken','gtg|pull':'Verteilte Sätze Ziehen','gtg|legs':'Kniebeugen über den Tag verteilt','leiter|push':'Leitern Drücken (schwere Tage)','leiter|pull':'Leitern Ziehen (schwere Tage)','split|legs':'Beine an schweren Tagen','schock|*':'Schockmethode (schwere Tage)','dichte|*':'Dichteblock (mittlere Tage)'};
 const blockName=key=>BLOCKS[key]||key;
 const MUSCLES={brust:{n:'Brust',e:'🫁',slot:'push'},ruecken:{n:'Rücken',e:'🧗',slot:'pull'},schultern:{n:'Schultern',e:'🙆',slot:'push'},bizeps:{n:'Bizeps & Unterarme',e:'💪',slot:'pull'},trizeps:{n:'Trizeps',e:'🙌',slot:'push'},bauch:{n:'Bauch & Rumpf',e:'🧘',slot:'core'},quad:{n:'Oberschenkel vorn',e:'🦵',slot:'legs'},po:{n:'Gesäß & Oberschenkel hinten',e:'🍑',slot:'legs'},waden:{n:'Waden',e:'🦶',slot:'legs'},explosiv:{n:'Explosiv & Ganzkörper',e:'⚡',slot:'schock'},sonstige:{n:'Sonstige',e:'📋',slot:'core'}};
@@ -324,7 +367,8 @@ function viewHeute(){
   for(let i=0;i<7;i++){const x=addDays(mon,i);const has=entries(p.id,x).some(l=>l.sets>0);h+=`<button class="day${x===iso?' sel':''}${x===todayISO()?' today':''}" data-act="day" data-iso="${x}">${WDS[fromISO(x).getDay()]}<b>${fromISO(x).getDate()}</b><i class="dot${has?' on':''}"></i></button>`;}
   h+=`<button class="arrow" data-act="week" data-n="7">›</button></div>`;
   // Tageskopf
-  h+=`<div class="card"><div class="dayhead"><div class="em">${di.e}</div><div><div class="big">${di.n}</div><div class="sub">${WD[d.getDay()]}, ${fmtDate(iso)}${iso!==todayISO()?' · <a href="#" data-act="today">zu heute</a>':''}</div></div></div><div class="hint" style="margin-top:10px">${di.t}</div>`;
+  const pct=dayProgress(p,iso,plan);const C=2*Math.PI*34;
+  h+=`<div class="card hero"><div class="herorow"><div class="dayhead"><div class="em">${di.e}</div><div style="min-width:0"><div class="big">${di.n}</div><div class="sub">${WD[d.getDay()]}, ${fmtDate(iso)}${iso!==todayISO()?' · <a href="#" data-act="today">zu heute</a>':''}</div></div></div>${plan.type!=='ruhe'?`<div class="ring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="34"/><circle class="pr" cx="42" cy="42" r="34" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct/100)).toFixed(1)}"/></svg><b>${pct}%</b><small>geschafft</small></div>`:''}</div><div class="hint" style="margin-top:14px">${di.t}</div><div style="margin-top:8px">${infoBtn('welle')} <span class="hint">So ist die Woche aufgebaut</span></div>`;
   const c=plan.c;
   if(c.before)h+=`<div class="hint" style="margin-top:8px">Zyklus startet am ${fmtDate(p.cycleStart)} (Einstellungen → Profil).</div>`;
   else h+=`<div style="margin-top:10px"><span class="pill ${c.deload?'blue':'red'}">Woche ${c.week} · Zyklus-Woche ${c.cw} von 4</span> ${c.deload?'<span class="pill blue">Leichte Woche: halbes Volumen</span>':''}</div>`;
@@ -340,7 +384,7 @@ function viewHeute(){
   // Sonstige Einträge des Tages (frei / nicht im Plan)
   const planned=new Set(plan.blocks.map(b=>b.kind+'|'+(b.exId||'*')));
   const extra=entries(p.id,iso).filter(l=>!(planned.has(l.kind+'|'+l.exId)||((l.kind==='schock'||l.kind==='dichte')&&planned.has(l.kind+'|*'))));
-  if(extra.length){h+=`<h2>Weitere Einträge</h2><div class="card list">`+extra.map(entryRow).join('')+`</div>`;}
+  if(extra.length){h+=`<h2>Weitere Einträge</h2>`+extra.map(entryCard).join('');}
   h+=`<button class="btn big" data-act="newEntry">＋ Freier Eintrag für diesen Tag</button>`;
   if(plan.off.length)h+=`<div class="hint" style="margin-top:14px">Aus deinem Plan genommen: ${plan.off.map(k=>`${esc(blockName(k))} <a href="#" data-act="blockOn" data-key="${k}">wieder rein</a>`).join(' · ')}</div>`;
   return h;
@@ -386,7 +430,7 @@ function blockCard(p,iso,b,plan){
     unit='Sätze';unitD='Sätzen';
   }
   const okMin=min&&sets>=min;const pct=goal?Math.min(100,Math.round(sets/goal*100)):0;
-  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div></div></div>
+  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${title}</div></div>${infoBtn(b.kind)}</div>
     <div class="rx">${tiles.map(t=>`<div${t.main?' class="main"':''}><b>${t.v}</b><span>${t.l}</span></div>`).join('')}</div>
     <div class="line">${line}</div>${mid}
     <div class="counter"><button class="rbtn" data-act="dec" data-kind="${b.kind}" data-ex="${exId}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}${goal?`<small>von ${goal} ${unitD}</small>`:`<small>${unit}</small>`}</div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="inc" data-kind="${b.kind}" data-ex="${exId}" data-reps="${incReps}" data-min="${b.minutes||''}">＋ ${b.kind==='leiter'?'Leiter':'Satz'}</button></div>
@@ -394,7 +438,13 @@ function blockCard(p,iso,b,plan){
     ${okMin&&sets<goal?'<div class="hint" style="margin-top:6px">✅ Minimum geschafft, Rest ist Bonus.</div>':sets>=goal&&goal?'<div class="hint" style="margin-top:6px">✅ Ziel erreicht. Mehr ist heute nicht nötig.</div>':''}
     <details class="tip"><summary>ℹ️ Hinweis${e?' · ✎ Eintrag bearbeiten':''}</summary><div class="dbody">${tip}${e?` <a href="#" data-act="editEntry" data-id="${e.id}">✎ Eintrag bearbeiten${e.note?' · Notiz: '+esc(e.note):''}</a>`:''}${demoLinks(ex(exId))}<div style="margin-top:8px"><button class="btn sm" data-act="blockOff" data-key="${b.key}">🚫 Aus meinem Plan nehmen</button></div></div></details></div>`;
 }
-function missingTest(exId,k,label,key){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div></div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div>${demoLinks(ex(exId))}</div>`;}
+function dayProgress(p,iso,plan){let tot=0,done=0;plan.blocks.forEach(b=>{if(b.kind==='dichte'){const e=findEntry(p.id,iso,'dichte',null);tot+=1;done+=e&&e.sets>0?1:0;return;}const min=b.sets?b.sets[0]:0;if(!min)return;const e=findEntry(p.id,iso,b.kind,b.exId);tot+=min;done+=Math.min(min,e?+e.sets:0);});return tot?Math.round(done/tot*100):0;}
+function missingTest(exId,k,label,key){return `<div class="card warn"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${label} ${esc(exName(exId))}</div><div class="bs">Dafür fehlt noch der Maximaltest. Erst testen, dann rechnet die App die Sätze aus.</div></div>${infoBtn('test')}</div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest" data-ex="${exId}">＋ Maximaltest</button><button class="btn" data-act="blockOff" data-key="${key}">🚫 Weglassen</button></div>${demoLinks(ex(exId))}</div>`;}
+function entryCard(l){const k=KIND[l.kind]||KIND.frei;const e=ex(l.exId);const reps=+l.reps||0;const sets=+l.sets||0;const ges=l.kind==='leiter'?sets*(reps*(reps+1)/2):sets*reps;
+  return `<div class="card"><div class="bh"><div class="be">${k.e}</div><div style="min-width:0"><div class="bt">${esc(exName(l.exId))}</div><div class="bs">${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}</div></div>${infoBtn(l.kind)}</div>
+    <div class="rx"><div class="main"><b>${reps||'–'}</b><span>${l.kind==='leiter'?'Oberste Sprosse':'Wdh. pro Satz'}</span></div><div><b>${ges}</b><span>Wdh. gesamt</span></div></div>
+    <div class="counter"><button class="rbtn" data-act="entDec" data-id="${l.id}"${sets?'':' disabled'}>−</button><div class="cnum">${sets}<small>${l.kind==='leiter'?'Leitern':'Sätze'}</small></div><button class="btn primary grow" style="min-height:56px;font-size:19px" data-act="entInc" data-id="${l.id}">＋ ${l.kind==='leiter'?'Leiter':'Satz'}</button></div>
+    <details class="tip"><summary>ℹ️ Hinweis · ✎ Eintrag bearbeiten</summary><div class="dbody">${INFO[l.kind]?INFO[l.kind].kurz:''} <a href="#" data-act="editEntry" data-id="${l.id}">✎ Eintrag bearbeiten${l.note?' · Notiz: '+esc(l.note):''}</a>${demoLinks(e)}</div></details></div>`;}
 function entryRow(l){const k=KIND[l.kind]||KIND.frei;const v=volume(l);return `<a class="item" href="#" data-act="editEntry" data-id="${l.id}"><div class="ie">${k.e}</div><div class="it"><b>${esc(exName(l.exId))}</b><span>${k.n}${l.kind==='dichte'&&l.minutes?' · '+l.minutes+' Min.':''}${l.kind==='leiter'?' · bis Sprosse '+l.reps:l.reps?' · '+l.reps+' Wdh.':''}${l.note?' · '+esc(l.note):''}</span></div><div class="iv">${l.sets}<small>${k.u}${v?' · '+v+' Wdh.':''}</small></div></a>`;}
 
 /* ---------- Verlauf ---------- */
@@ -403,8 +453,8 @@ function viewVerlauf(){
   const wk=mondayOf(todayISO()),lastWk=addDays(wk,-7);
   const vol=(from,to,slot)=>all.filter(l=>l.date>=from&&l.date<=to&&ex(l.exId)&&ex(l.exId).slot===slot).reduce((s,l)=>s+volume(l),0);
   let h=`<h2>Diese Woche · ab ${fmtShort(wk)}</h2><div class="kpi">
-    <div class="k"><b>${vol(wk,addDays(wk,6),'push')}</b><span>Wdh. Drücken (Vorwoche ${vol(lastWk,addDays(lastWk,6),'push')})</span></div>
-    <div class="k"><b>${vol(wk,addDays(wk,6),'pull')}</b><span>Wdh. Ziehen (Vorwoche ${vol(lastWk,addDays(lastWk,6),'pull')})</span></div>
+    <div class="k k1"><b>${vol(wk,addDays(wk,6),'push')}</b><span>Wdh. Drücken (Vorwoche ${vol(lastWk,addDays(lastWk,6),'push')})</span></div>
+    <div class="k k2"><b>${vol(wk,addDays(wk,6),'pull')}</b><span>Wdh. Ziehen (Vorwoche ${vol(lastWk,addDays(lastWk,6),'pull')})</span></div>
     <div class="k"><b>${vol(wk,addDays(wk,6),'legs')}</b><span>Wdh. Beine (Vorwoche ${vol(lastWk,addDays(lastWk,6),'legs')})</span></div>
     <div class="k"><b>${new Set(all.filter(l=>l.date>=wk).map(l=>l.date)).size}</b><span>Trainingstage diese Woche</span></div></div>`;
   const dichte=all.filter(l=>l.kind==='dichte'&&l.sets>0).slice(0,8);
@@ -421,7 +471,7 @@ function viewVerlauf(){
 function viewTests(){
   const p=prof();const used=[p.push,p.pull,p.legs,p.dichte].filter((x,i,a)=>x&&a.indexOf(x)===i);
   const ids=used.concat(S.exercises.filter(e=>e.slot!=='schock'&&!used.includes(e.id)&&S.tests.some(t=>t.pid===p.id&&t.exId===e.id)).map(e=>e.id));
-  let h=`<div class="card blue"><div class="bh"><div class="be">🧪</div><div><div class="bt">Maximaltest</div><div class="bs">So viele saubere Wiederholungen wie möglich, einmal pro Übung. Daraus rechnet die App: Satzgröße = Hälfte, Leiter bis 1–5, Dichteblock. Neu testen nach jeder leichten Woche.</div></div></div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest">＋ Maximaltest eintragen</button></div></div>`;
+  let h=`<div class="card blue"><div class="bh"><div class="be">🧪</div><div style="min-width:0"><div class="bt">Maximaltest</div><div class="bs">So viele saubere Wiederholungen wie möglich, einmal pro Übung. Daraus rechnet die App: Satzgröße = Hälfte, Leiter bis 1–5, Dichteblock. Neu testen nach jeder leichten Woche.</div></div>${infoBtn('test')}</div><div class="row" style="margin-top:12px"><button class="btn primary grow" data-act="addTest">＋ Maximaltest eintragen</button></div></div>`;
   ids.forEach(id=>{const e=ex(id);if(!e)return;const list=S.tests.filter(t=>t.pid===p.id&&t.exId===id).sort((a,b)=>b.date.localeCompare(a.date)||(b.created||0)-(a.created||0));const n=numbers(p.id,id);
     h+=`<h2>${esc(e.name)} · ${SLOT[e.slot]}</h2><div class="card">`;
     if(n){h+=`<div class="row" style="gap:6px;margin-bottom:8px"><span class="pill red">Max ${n.max} · ${esc(n.level)}</span><span class="pill">Satzgröße ${n.gtgReps}</span><span class="pill">Leiter bis ${n.ladderTop}</span><span class="pill">Dichte à ${n.dichteReps}</span></div>`;
@@ -497,7 +547,7 @@ function entryModal(id,dateISO){
   const p=prof();const l=id?S.log.find(x=>x.id===id):{id:null,pid:p.id,date:dateISO||UI.date,kind:'gtg',exId:p.push,sets:1,reps:'',minutes:'',note:''};if(!l)return;
   M={type:'entry',id:l.id};const sg=suggestReps(l.kind,l.exId);const reps=l.reps||sg.reps;const mins=l.minutes||(l.kind==='dichte'?15:0);
   modal(l.id?'Eintrag bearbeiten':'Neuer Eintrag',`
-    <div class="field"><label>Was hast du gemacht?</label><input type="hidden" id="f-kind" value="${l.kind}"><div class="profiles kinds" id="f-kinds">${Object.keys(KIND).map(k=>`<button type="button" class="chip${k===l.kind?' on':''}" data-act="kindSel" data-k="${k}">${KIND[k].e} ${KIND[k].n}</button>`).join('')}</div></div>
+    <div class="field"><label>Was hast du gemacht?</label><input type="hidden" id="f-kind" value="${l.kind}"><div class="profiles kinds" id="f-kinds">${Object.keys(KIND).map(k=>`<button type="button" class="chip${k===l.kind?' on':''}" data-act="kindSel" data-k="${k}">${KIND[k].e} ${KIND[k].n}<i class="ci" data-act="info" data-k="${k}">ⓘ</i></button>`).join('')}</div><div class="kinfo" id="f-kinfo">${kinfoLine(l.kind)}</div></div>
     <div class="field"><label>Übung</label>${pickBtn('f-ex',l.exId,'')}</div>
     <div class="field"><label id="l-sets">${l.kind==='leiter'?'Leitern geschafft':'Sätze geschafft'}</label>${numPick('f-sets',l.sets??1,0,30)}</div>
     <div class="field"><label id="l-reps">${l.kind==='leiter'?'Oberste Sprosse':'Wiederholungen pro Satz'}</label>${numPick('f-reps',reps,0,100,sg.why)}</div>
@@ -506,7 +556,8 @@ function entryModal(id,dateISO){
     <details class="tip"><summary>📝 Notiz (optional)</summary><div class="dbody"><textarea id="f-note" placeholder="z. B. Hände auf dem Tisch, Schulter gezwickt …" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:17px;min-height:70px">${esc(l.note||'')}</textarea></div></details>`,
     `<button class="btn primary grow" data-act="mSave">💾 Speichern</button>${l.id?sure(l.id,'mDelete'):''}`);
 }
-function applyKind(k){const kinds=$('#f-kinds');if(!kinds)return;$('#f-kind').value=k;kinds.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.k===k));
+function kinfoLine(k){const i=INFO[k];return i?`<b>${i.t}:</b> ${i.kurz} <a href="#" data-act="info" data-k="${k}">ⓘ Mehr dazu</a>`:'';}
+function applyKind(k){const kinds=$('#f-kinds');if(!kinds)return;$('#f-kind').value=k;const ki=$('#f-kinfo');if(ki)ki.innerHTML=kinfoLine(k);kinds.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.k===k));
   $('#l-sets').textContent=k==='leiter'?'Leitern geschafft':'Sätze geschafft';$('#l-reps').textContent=k==='leiter'?'Oberste Sprosse':'Wiederholungen pro Satz';
   const w=$('#f-min-wrap');w.hidden=k!=='dichte';const sg=suggestReps(k,val('f-ex'));npSet('f-reps',sg.reps);npHint('f-reps',sg.why);if(k==='dichte'&&!(+val('f-min')))npSet('f-min',sg.minutes||15);}
 function saveEntry(){const p=prof();const d={date:val('f-date')||UI.date,kind:val('f-kind'),exId:val('f-ex'),sets:Math.max(0,Math.round(num('f-sets'))),reps:Math.round(num('f-reps'))||'',minutes:Math.round(num('f-min'))||'',note:val('f-note')};
@@ -523,7 +574,7 @@ function testModal(id,exId){
     <div class="field"><label>Datum</label><input type="date" id="f-date" value="${t.date}"></div>
     <div class="field"><label>Maximum: saubere Wiederholungen am Stück</label>${numPick('f-max',t.max||(latestTest(p.id,e.id)||{}).max||10,1,100,'Wischen oder antippen. Die letzte darf langsam sein, aber nicht krumm.')}</div>
     <div class="field"><label>Notiz</label><input type="text" id="f-note" value="${esc(t.note||'')}" placeholder="optional"></div>
-    <div class="hint">Sauber heißt: Körper gerade, Brust fast am Boden, Arme oben ganz gestreckt.</div>`,
+    <div class="hint">Sauber heißt: Körper gerade, Brust fast am Boden, Arme oben ganz gestreckt. <a href="#" data-act="info" data-k="test">ⓘ Mehr zum Test</a></div>`,
     `<button class="btn primary grow" data-act="mSave">💾 Speichern</button>${t.id?sure(t.id,'mDelete'):''}`);
 }
 function saveTest(){const p=prof();const mx=Math.round(num('f-max'));if(mx<1){toast('Bitte das Maximum eintragen');return;}
@@ -581,6 +632,9 @@ function pickDone(id){const t=PK.target;$('#picker').hidden=true;
   if(t==='f-ex'&&M&&M.type==='test')CHG.testEx({value:id});
   if(t==='f-ex'&&M&&M.type==='entry')applyKind(val('f-kind'));}
 
+function openInfo(k){const i=INFO[k];if(!i)return;$('#info-title').textContent=i.t;$('#info-kurz').textContent=i.kurz;$('#info-body').innerHTML=i.lang;$('#info').hidden=false;$('#info-body').scrollTop=0;}
+const infoBtn=k=>INFO[k]?`<button type="button" class="ci" data-act="info" data-k="${k}" title="Erklärung">ⓘ</button>`:'';
+
 /* ---------- Aktionen ---------- */
 function setSure(id){UI.sure=id;clearTimeout(UI.sureT);UI.sureT=setTimeout(()=>{if(UI.sure===id){UI.sure=null;render();if(!$('#modal').hidden)refreshModalFoot();}},4000);}
 function refreshModalFoot(){if(!M)return;const id=M.id;const f=$('#m-foot');if(!f||!id)return;const b=f.querySelector('[data-act="mDelete"]');if(b)b.outerHTML=sure(id,'mDelete');}
@@ -597,7 +651,7 @@ const ACT={
   today:()=>{UI.date=todayISO();render();},
   inc:el=>bump(el.dataset.kind,el.dataset.ex,1,+el.dataset.reps||'',+el.dataset.min||''),
   dec:el=>bump(el.dataset.kind,el.dataset.ex,-1),
-  newEntry:el=>entryModal(null,el.dataset.today?todayISO():UI.date),
+  newEntry:el=>entryModal(null,el.dataset.today?todayISO():(el.dataset.nav&&UI.view!=='heute'?todayISO():UI.date)),
   editEntry:el=>entryModal(el.dataset.id),
   addTest:el=>testModal(null,el.dataset.ex),
   editTest:el=>testModal(el.dataset.id),
@@ -610,6 +664,10 @@ const ACT={
   import:()=>$('#importFile').click(),
   wipe:()=>{if(UI.sure!=='wipe'){setSure('wipe');render();return;}try{localStorage.removeItem(KEY);}catch(e){}S=defaults();UI.sure=null;save();render();toast('Alles gelöscht');},
   kindSel:el=>applyKind(el.dataset.k),
+  info:el=>openInfo(el.dataset.k),
+  infoClose:()=>{$('#info').hidden=true;},
+  entInc:el=>{const l=S.log.find(x=>x.id===el.dataset.id);if(!l)return;l.sets=(+l.sets||0)+1;save();render();},
+  entDec:el=>{const l=S.log.find(x=>x.id===el.dataset.id);if(!l)return;l.sets=Math.max(0,(+l.sets||0)-1);save();render();},
   blockOff:el=>{const p=prof();p.off=p.off||{};p.off[el.dataset.key]=true;save();render();toast('Aus dem Plan genommen – unten „wieder rein“ oder im Profil');},
   blockOn:el=>{const p=prof();if(p.off)delete p.off[el.dataset.key];save();render();toast('Wieder im Plan');},
   npStep:el=>npSet(el.dataset.id,(+val(el.dataset.id)||0)+(+el.dataset.d)),
